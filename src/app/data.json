@@ -1,0 +1,18 @@
+[
+  {
+    "id": "1",
+    "name": "Doni Parulian",
+    "role": "Admin"
+  },
+  {
+    "id": "2",
+    "name": "Twilight",
+    "role": "Maintenance"
+  },
+  {
+    "id": "3",
+    "name": "Salman",
+    "role": "Common"
+  }
+]
+
