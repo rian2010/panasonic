@@ -49,19 +49,19 @@ const MachineStatusGrid: React.FC = () => {
       </table>
       <div className="flex justify-center mt-4 space-x-4">
         <div className="flex items-center">
-          <div className="w-3 h-3 bg-white"></div>
+          <div className="w-3 h-3 bg-white rounded-md"></div>
           <span className="ml-2 text-xs">Available</span>
         </div>
         <div className="flex items-center">
-          <div className="w-3 h-3 bg-teal-500"></div>
+          <div className="w-3 h-3 bg-teal-500 rounded-md"></div>
           <span className="ml-2 text-xs">Safe</span>
         </div>
         <div className="flex items-center">
-          <div className="w-3 h-3 bg-yellow-500"></div>
+          <div className="w-3 h-3 bg-yellow-500 rounded-md"></div>
           <span className="ml-2 text-xs">Medium</span>
         </div>
         <div className="flex items-center">
-          <div className="w-3 h-3 bg-red-500"></div>
+          <div className="w-3 h-3 bg-red-500 rounded-md"></div>
           <span className="ml-2 text-xs">Unsafe</span>
         </div>
       </div>

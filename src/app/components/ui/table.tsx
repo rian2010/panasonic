@@ -2,9 +2,9 @@ import { useState } from "react";
 import { FunnelIcon, PlusIcon } from "@heroicons/react/24/outline";
 
 function TableComponent() {
-  const [activeTab, setActiveTab] = useState("Line Monitoring");
-  const [sortType, setSortType] = useState<string | null>(null); // State to manage sorting type
-  const [searchQuery, setSearchQuery] = useState<string>(""); // State to manage search query
+  const [activeTab, setActiveTab] = useState("Part Types");
+  const [sortType, setSortType] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   interface Part {
     part: string;
@@ -56,7 +56,7 @@ function TableComponent() {
       statusColor: "bg-[#FF949F]",
     },
   ];
-  // Sample data
+
   const partTypes: Part[] = [
     { part: "Bor", size: "5 mm", model: "Model A1", quantity: 5 },
     { part: "Bor", size: "10 mm", model: "Model A2", quantity: 10 },
@@ -64,13 +64,8 @@ function TableComponent() {
     { part: "Cutter", size: "20 mm", model: "Model C1", quantity: 12 },
   ];
 
-  // Function to handle sorting based on the sortType
   const handleSort = () => {
-    if (sortType === "asc") {
-      setSortType("desc");
-    } else {
-      setSortType("asc");
-    }
+    setSortType((prevSortType) => (prevSortType === "asc" ? "desc" : "asc"));
   };
 
   const sortedPartTypes = [...partTypes].sort((a, b) => {
@@ -87,36 +82,33 @@ function TableComponent() {
   );
 
   return (
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <div className="relative justify-center overflow-x-auto shadow-md sm:rounded-lg">
       <div className="overflow-x-auto whitespace-nowrap pl-4 py-2 text-md bg-[#3E3B64] text-white border-b">
-        <div className="flex justify-between items-center">
-          <div className="flex space-x-4">
+        <div className="flex justify-between items-center flex-col sm:flex-row">
+          <div className="flex space-x-4 mb-2 sm:mb-0">
             <span
-              className={`cursor-pointer ${
-                activeTab === "Line Monitoring"
-                  ? "text-blue-400 border-b-2 border-blue-400"
-                  : ""
-              }`}
-              onClick={() => setActiveTab("Line Monitoring")}
+              className={`cursor-pointer ${activeTab === "Part Types"
+                ? "text-blue-400 border-b-2 border-blue-400"
+                : ""
+                }`}
+              onClick={() => setActiveTab("Part Types")}
             >
               Part Types
             </span>
             <span
-              className={`cursor-pointer ${
-                activeTab === "Finished Products"
-                  ? "text-blue-400 border-b-2 border-blue-400"
-                  : ""
-              }`}
-              onClick={() => setActiveTab("Finished Products")}
+              className={`cursor-pointer ${activeTab === "Part Details"
+                ? "text-blue-400 border-b-2 border-blue-400"
+                : ""
+                }`}
+              onClick={() => setActiveTab("Part Details")}
             >
               Part Details
             </span>
             <span
-              className={`cursor-pointer ${
-                activeTab === "Delivered"
-                  ? "text-blue-400 border-b-2 border-blue-400"
-                  : ""
-              }`}
+              className={`cursor-pointer ${activeTab === "Delivered"
+                ? "text-blue-400 border-b-2 border-blue-400"
+                : ""
+                }`}
               onClick={() => setActiveTab("Delivered")}
             >
               Delivered
@@ -131,9 +123,8 @@ function TableComponent() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             <div
-              className={`text-center p-2 pr-4 rounded cursor-pointer flex items-center ${
-                sortType ? "bg-[#55BED2]" : "bg-gray-500"
-              }`}
+              className={`text-center p-2 pr-4 rounded cursor-pointer flex items-center ${sortType ? "bg-[#55BED2]" : "bg-gray-500"
+                }`}
               onClick={handleSort}
             >
               A-Z
@@ -142,8 +133,8 @@ function TableComponent() {
           </div>
         </div>
       </div>
-      <div>
-        {activeTab === "Line Monitoring" && (
+      <div className="py-3 overflow-x-auto">
+        {activeTab === "Part Types" && (
           <table className="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400">
             <thead className="text-xs uppercase bg-[#3E3B64] text-white">
               <tr>
@@ -166,11 +157,10 @@ function TableComponent() {
               {filteredPartTypes.map((part, index) => (
                 <tr
                   key={index}
-                  className={`${
-                    index % 2 === 0
-                      ? "bg-[#3E3B64] text-white"
-                      : "bg-[#4D4B6C] text-white"
-                  }`}
+                  className={`${index % 2 === 0
+                    ? "bg-[#3E3B64] text-white"
+                    : "bg-[#4D4B6C] text-white"
+                    }`}
                 >
                   <td className="px-6 py-4">{part.part}</td>
                   <td className="px-6 py-4">{part.size}</td>
@@ -179,7 +169,7 @@ function TableComponent() {
                   <td className="px-6 py-4">
                     <a
                       href="#"
-                      className="font-medium text-white bg-[#55BED2] px-2 py-1 rounded dark:text-blue-500 hover:bg-blue-700"
+                      className=" font-medium text-white bg-[#55BED2] px-2 py-1 rounded dark:text-blue-500 hover:bg-blue-700"
                     >
                       View Details
                     </a>
@@ -189,11 +179,11 @@ function TableComponent() {
             </tbody>
           </table>
         )}
-        {activeTab === "Finished Products" && (
+        {activeTab === "Part Details" && (
           <div>
             <div className="px-4">
               <button className="bg-[#59C5F7] hover:bg-green-700 text-black font-bold py-2 px-4 rounded my-4 flex items-center">
-                <PlusIcon className="w-6 h-6"/>
+                <PlusIcon className="w-6 h-6" />
                 <span>Add Part</span>
               </button>
             </div>
@@ -228,11 +218,10 @@ function TableComponent() {
                 {partDetails.map((partDetail, index) => (
                   <tr
                     key={index}
-                    className={`${
-                      index % 2 === 0
-                        ? "odd:bg-[#3E3B64] odd:dark:bg-[#4D4B6C]"
-                        : "even:bg-[#4D4B6C] even:dark:bg-[#3E3B64]"
-                    } text-white`}
+                    className={`${index % 2 === 0
+                      ? "odd:bg-[#3E3B64] odd:dark:bg-[#4D4B6C]"
+                      : "even:bg-[#4D4B6C] even:dark:bg-[#3E3B64]"
+                      } text-white`}
                   >
                     <td className="px-6 py-4">{partDetail.part}</td>
                     <td className="px-6 py-4">{partDetail.size}</td>
@@ -265,7 +254,7 @@ function TableComponent() {
         )}
         {activeTab === "Delivered" && (
           <table className="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <thead className="text-xs text-white uppercase bg-[#3E3B64] dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" className="px-6 py-3">
                   Order
@@ -280,14 +269,14 @@ function TableComponent() {
               </tr>
             </thead>
             <tbody>
-              <tr className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+              <tr className="odd:bg-[#3E3B64] even:bg-[#4D4B6C] text-white">
                 <td className="px-6 py-4">Order 1</td>
                 <td className="px-6 py-4">Customer A</td>
                 <td className="px-6 py-4">Delivered</td>
                 <td className="px-6 py-4">
                   <a
                     href="#"
-                    className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                    className="font-medium text-white bg-[#55BED2] px-2 py-1 rounded dark:text-blue-500 hover:bg-blue-700"
                   >
                     View Details
                   </a>
@@ -302,3 +291,4 @@ function TableComponent() {
 }
 
 export default TableComponent;
+

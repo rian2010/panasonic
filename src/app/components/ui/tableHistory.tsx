@@ -3,13 +3,10 @@ import Modal from '@/app/components/ui/partHistory';
 
 interface Parts {
   name: string;
-  size: string;
   model: string;
   machine: string;
   line: number;
   location: string;
-  status: string;
-  statusColor: string;
 }
 
 const TableComponent: React.FC = () => {
@@ -26,35 +23,26 @@ const TableComponent: React.FC = () => {
   const parts: Parts[] = [
     {
       name: "Bor",
-      size: "5 mm",
       model: "Model A1",
       machine: "Machine 1",
       line: 1,
-      location: "Shelf 1",
-      status: "Used",
-      statusColor: "bg-teal-400"
+      location: "Shelf A1"
     },
     {
       name: "Bor",
-      size: "5 mm",
       model: "Model A1",
       machine: "Machine 1",
       line: 2,
-      location: "Shelf 1",
-      status: "Used",
-      statusColor: "bg-teal-400"
+      location: "Shelf A1"
     },
     {
       name: "Bor",
-      size: "5 mm",
       model: "Model A1",
       machine: "Machine 1",
       line: 3,
-      location: "Shelf 1",
-      status: "Used",
-      statusColor: "bg-teal-400"
+      location: "Shelf A1"
     },
-  ]
+  ];
 
   const filteredMachines = parts.filter((part) =>
     part.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -102,24 +90,18 @@ const TableComponent: React.FC = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
-      <div className="py-3">
-        <table className="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400">
+      <div className="py-3 overflow-x-auto">
+        <table className="min-w-full text-sm text-center text-gray-500 dark:text-gray-400">
           <thead className="text-xs uppercase bg-[#3E3B64] text-white border-b">
             <tr>
               <th scope="col" className="px-6 py-3">
                 Part Name
               </th>
               <th scope="col" className="px-6 py-3">
-                Size
-              </th>
-              <th scope="col" className="px-6 py-3">
                 Model
               </th>
               <th scope="col" className="px-6 py-3">
-                Machines
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Line
+                Machine
               </th>
               <th scope="col" className="px-6 py-3">
                 Start Date
@@ -129,9 +111,6 @@ const TableComponent: React.FC = () => {
               </th>
               <th scope="col" className="px-6 py-3">
                 Location
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Status
               </th>
               <th scope="col" className="px-6 py-3"></th>
             </tr>
@@ -146,20 +125,11 @@ const TableComponent: React.FC = () => {
                   } text-white`}
               >
                 <td className="px-6 py-4">{part.name}</td>
-                <td className="px-6 py-4">{part.size}</td>
                 <td className="px-6 py-4">{part.model}</td>
                 <td className="px-6 py-4">{part.machine}</td>
-                <td className="px-6 py-4">{part.line}</td>
+                <td className="px-6 py-4"></td>
+                <td className="px-6 py-4"></td>
                 <td className="px-6 py-4">{part.location}</td>
-                <td className="px-6 py-4">
-                  {part.status && (
-                    <span
-                      className={`px-4 py-2 rounded-full ${part.statusColor} text-blue-900 font-bold`}
-                    >
-                      {part.status}
-                    </span>
-                  )}
-                </td>
                 <td className="px-6 py-4">
                   <button
                     onClick={() => handleViewHistory(part)}
@@ -177,11 +147,8 @@ const TableComponent: React.FC = () => {
         {selectedPart && (
           <div>
             <h3 className="text-lg font-medium text-gray-900">{selectedPart.name}</h3>
-            <p className="mt-1 text-sm text-gray-600">Size: {selectedPart.size}</p>
             <p className="mt-1 text-sm text-gray-600">Model: {selectedPart.model}</p>
             <p className="mt-1 text-sm text-gray-600">Machine: {selectedPart.machine}</p>
-            <p className="mt-1 text-sm text-gray-600">Location: {selectedPart.location}</p>
-            <p className="mt-1 text-sm text-gray-600">Status: {selectedPart.status}</p>
           </div>
         )}
       </Modal>

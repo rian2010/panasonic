@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { PlusIcon } from "@heroicons/react/24/outline";
+import { PlusIcon, FunnelIcon } from "@heroicons/react/24/outline";
 
 interface Machine {
   line: number;
@@ -20,10 +20,14 @@ const TableComponent: React.FC = () => {
   const [sortType, setSortType] = useState<null | string>(null); // State to manage sorting type
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  // Function to handle sorting based on the sortType
   const handleSort = () => {
-    console.log("Sorting A-Z");
+    if (sortType === "asc") {
+      setSortType("desc");
+    } else {
+      setSortType("asc");
+    }
   };
+
 
   const machines: Machine[] = [
     {
@@ -68,13 +72,13 @@ const TableComponent: React.FC = () => {
   );
 
   return (
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <div className="relative overflow-hidden shadow-md sm:rounded-lg">
       <div className="p-4 bg-[#4D4B6C] text-center text-white rounded-t-lg">
         <p className="text-sm">
           <span className="text-green-400">{"< 60 °C = Safe (Green)"}</span>
           <br />
           <span className="text-yellow-400">
-            {"60 °C & 90 °C = Medium (Yellow)"}
+            {"60 °C ~ 90 °C = Medium (Yellow)"}
           </span>
           <br />
           <span className="text-red-400">{"> 90 °C = Unsafe (Red)"}</span>
@@ -84,41 +88,38 @@ const TableComponent: React.FC = () => {
         <div className="flex justify-between items-center">
           <div className="flex space-x-4">
             <span
-              className={`cursor-pointer ${
-                activeTab === "Line Monitoring"
-                  ? "text-blue-400 border-b-2 border-blue-400"
-                  : ""
-              }`}
+              className={`cursor-pointer ${activeTab === "Line Monitoring"
+                ? "text-blue-400 border-b-2 border-blue-400"
+                : ""
+                }`}
               onClick={() => setActiveTab("Line Monitoring")}
             >
               Line Monitoring
             </span>
             <span
-              className={`cursor-pointer ${
-                activeTab === "Line"
-                  ? "text-blue-400 border-b-2 border-blue-400"
-                  : ""
-              }`}
+              className={`cursor-pointer ${activeTab === "Line"
+                ? "text-blue-400 border-b-2 border-blue-400"
+                : ""
+                }`}
               onClick={() => setActiveTab("Line")}
             >
               Manage Line
             </span>
             <span
-              className={`cursor-pointer ${
-                activeTab === "Delivered"
-                  ? "text-blue-400 border-b-2 border-blue-400"
-                  : ""
-              }`}
+              className={`cursor-pointer ${activeTab === "Delivered"
+                ? "text-blue-400 border-b-2 border-blue-400"
+                : ""
+                }`}
               onClick={() => setActiveTab("Delivered")}
             >
               Delivered
             </span>
           </div>
-          <div
-            className="text-center p-2 pr-4 rounded cursor-pointer"
-            onClick={handleSort}
-          >
-            A-Z
+          <div className="pr-4">
+            <button className='flex items-center bg-blue-500 hover:bg-blue-700 text-center p-2 rounded cursor-pointer'>
+              A-Z
+              <FunnelIcon className="w-4 h-4 ml-1" />
+            </button>
           </div>
         </div>
       </div>
@@ -131,19 +132,23 @@ const TableComponent: React.FC = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
         {activeTab === "Line Monitoring" && (
-          <button className="text-sm bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-xl flex items-center space-x-2">
-            <PlusIcon className="w-6 h-6" />
-            <span>Add Machine</span>
-          </button>
+          <div className="pr-4">
+            <button className="text-sm bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-xl flex items-center space-x-2">
+              <PlusIcon className="w-6 h-6" />
+              <span>Add Machine</span>
+            </button>
+          </div>
         )}
         {activeTab === "Line" && (
-          <button className="text-sm bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-xl flex items-center space-x-2">
-            <PlusIcon className="w-6 h-6" />
-            <span>Add Line</span>
-          </button>
+          <div className="pr-4">
+            <button className="text-sm bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-xl flex items-center space-x-2">
+              <PlusIcon className="w-6 h-6" />
+              <span>Add Line</span>
+            </button>
+          </div>
         )}
       </div>
-      <div className="py-3">
+      <div className="py-3 overflow-x-auto">
         {activeTab === "Line Monitoring" && (
           <table className="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400">
             <thead className="text-xs uppercase bg-[#3E3B64] text-white border-b">
@@ -167,11 +172,10 @@ const TableComponent: React.FC = () => {
               {filteredMachines.map((machine, index) => (
                 <tr
                   key={index}
-                  className={`${
-                    index % 2 === 0
-                      ? "odd:bg-[#3E3B64] odd:dark:bg-[#4D4B6C]"
-                      : "even:bg-[#4D4B6C] even:dark:bg-[#3E3B64]"
-                  } text-white`}
+                  className={`${index % 2 === 0
+                    ? "odd:bg-[#3E3B64] odd:dark:bg-[#4D4B6C]"
+                    : "even:bg-[#4D4B6C] even:dark:bg-[#3E3B64]"
+                    } text-white`}
                 >
                   <td className="px-6 py-4">{machine.line}</td>
                   <td className="px-6 py-4">{machine.name}</td>
@@ -215,11 +219,10 @@ const TableComponent: React.FC = () => {
               {lines.map((line, index) => (
                 <tr
                   key={index}
-                  className={`${
-                    index % 2 === 0
-                      ? "odd:bg-[#3E3B64] odd:dark:bg-[#4D4B6C]"
-                      : "even:bg-[#4D4B6C] even:dark:bg-[#3E3B64]"
-                  } text-white`}
+                  className={`${index % 2 === 0
+                    ? "odd:bg-[#3E3B64] odd:dark:bg-[#4D4B6C]"
+                    : "even:bg-[#4D4B6C] even:dark:bg-[#3E3B64]"
+                    } text-white`}
                 >
                   <td className="px-6 py-4">{line.line}</td>
                   <td className="px-6 py-4">{line.status}</td>
@@ -251,3 +254,5 @@ const TableComponent: React.FC = () => {
 };
 
 export default TableComponent;
+
+
