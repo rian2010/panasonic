@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import pool from "@/app/libs/mysql";
+import { NextApiResponse, NextApiRequest } from "next";
 
 
 export async function GET() {
@@ -16,4 +17,6 @@ export async function GET() {
     }, { status: 500 })
   }
 }
+
+
 

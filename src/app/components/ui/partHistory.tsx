@@ -25,19 +25,19 @@ const Modal: FC<ModalProps> = ({ isVisible, onClose, children }) => {
               </div>
               <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                 <dt className="text-sm font-medium text-gray-900">Size</dt>
-                <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">Backend Developer</dd>
+                <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">-</dd>
               </div>
               <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                 <dt className="text-sm font-medium text-gray-900">Model</dt>
-                <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">margotfoster@example.com</dd>
+                <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">-</dd>
               </div>
               <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                 <dt className="text-sm font-medium text-gray-900">Machine</dt>
-                <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">$120,000</dd>
+                <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">-</dd>
               </div>
               <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                 <dt className="text-sm font-medium text-gray-900">Line</dt>
-                <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">$120,000</dd>
+                <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">-</dd>
               </div>
               <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                 <dt className="text-sm font-medium text-gray-900">Start Date</dt>

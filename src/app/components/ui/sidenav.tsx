@@ -6,9 +6,11 @@ import {
   CurrencyDollarIcon,
   ChartBarIcon,
   Cog6ToothIcon,
-  ArrowLeftEndOnRectangleIcon,
+  ArrowLeftOnRectangleIcon,
   Bars3Icon,
-  XMarkIcon
+  XMarkIcon,
+  ChevronRightIcon,
+  ChevronDownIcon
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import Image from "next/image";
@@ -16,9 +18,14 @@ import Logo from "@/app/images/pn1-removebg-preview.png";
 
 function SideNav() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isInventorySubmenuOpen, setIsInventorySubmenuOpen] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const toggleInventorySubmenu = () => {
+    setIsInventorySubmenuOpen(!isInventorySubmenuOpen);
   };
 
   return (
@@ -35,7 +42,7 @@ function SideNav() {
           } md:translate-x-0 md:relative md:top-auto md:left-auto z-40`}
       >
         <div className="flex items-center mb-4 pl-4 py-2">
-          <Image src={Logo} alt="General" width={180} height={100} />
+          <Image src={Logo} alt="General" width={180} height={100} priority={true} />
         </div>
         <div className="pl-4">
           <Link href="/dashboard">
@@ -44,22 +51,46 @@ function SideNav() {
               <span>Dashboard</span>
             </div>
           </Link>
-          <Link href="/dashboard/inventory">
-            <div className="flex items-center cursor-pointer py-3 hover:text-[#55BED2]">
+          <div>
+            <div
+              className="flex items-center cursor-pointer py-3 hover:text-[#55BED2]"
+              onClick={toggleInventorySubmenu}
+            >
               <ArchiveBoxIcon className="h-5 w-5 mr-2" />
               <span>Inventory</span>
+              {isInventorySubmenuOpen ? (
+                <ChevronDownIcon className="h-5 w-5 ml-auto" />
+              ) : (
+                <ChevronRightIcon className="h-5 w-5 ml-auto" />
+              )}
             </div>
-          </Link>
+            {isInventorySubmenuOpen && (
+              <div className="pl-6">
+                <Link href="/dashboard/inventory/">
+                  <div className="flex items-center cursor-pointer py-3 hover:text-[#55BED2]">
+                    <span>Part</span>
+                  </div>
+                </Link>
+                <Link href="/dashboard/inventory/model">
+                  <div className="flex items-center cursor-pointer py-3 hover:text-[#55BED2]">
+                    <span>Model</span>
+                  </div>
+                </Link>
+              </div>
+            )}
+          </div>
           <Link href="/dashboard/line">
             <div className="flex items-center cursor-pointer py-3 hover:text-[#55BED2]">
               <ServerStackIcon className="h-5 w-5 mr-2" />
               <span>Line</span>
             </div>
           </Link>
-          <div className="flex items-center cursor-pointer py-3 hover:text-[#55BED2]">
-            <CurrencyDollarIcon className="h-5 w-5 mr-2" />
-            <span>Order Part</span>
-          </div>
+          <Link href="/dashboard/part">
+            <div className="flex items-center cursor-pointer py-3 hover:text-[#55BED2]">
+              <CurrencyDollarIcon className="h-5 w-5 mr-2" />
+              <span>Order Part</span>
+            </div>
+          </Link>
           <Link href="/dashboard/history">
             <div className="flex items-center cursor-pointer py-3 hover:text-[#55BED2]">
               <ChartBarIcon className="h-5 w-5 mr-2" />
@@ -76,7 +107,7 @@ function SideNav() {
             </div>
           </Link>
           <div className="flex items-center cursor-pointer py-3 hover:text-[#55BED2]">
-            <ArrowLeftEndOnRectangleIcon className="h-5 w-5 mr-2" />
+            <ArrowLeftOnRectangleIcon className="h-5 w-5 mr-2" />
             <span>Log Out</span>
           </div>
         </div>
