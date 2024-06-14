@@ -88,7 +88,7 @@ function TableComponent() {
           <div className="flex space-x-4 mb-2 sm:mb-0">
             <span
               className={`cursor-pointer ${activeTab === "Part Types"
-                ? "text-blue-400 border-b-2 border-blue-400"
+                ? "text-white border-b-2 border-blue-400"
                 : ""
                 }`}
               onClick={() => setActiveTab("Part Types")}
@@ -97,21 +97,12 @@ function TableComponent() {
             </span>
             <span
               className={`cursor-pointer ${activeTab === "Part Details"
-                ? "text-blue-400 border-b-2 border-blue-400"
+                ? "text-white border-b-2 border-blue-400"
                 : ""
                 }`}
               onClick={() => setActiveTab("Part Details")}
             >
               Part Details
-            </span>
-            <span
-              className={`cursor-pointer ${activeTab === "Delivered"
-                ? "text-blue-400 border-b-2 border-blue-400"
-                : ""
-                }`}
-              onClick={() => setActiveTab("Delivered")}
-            >
-              Delivered
             </span>
           </div>
           <div className="flex items-center">
@@ -200,12 +191,6 @@ function TableComponent() {
                     Model
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    Machine
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Line
-                  </th>
-                  <th scope="col" className="px-6 py-3">
                     Location
                   </th>
                   <th scope="col" className="px-6 py-3">
@@ -226,8 +211,6 @@ function TableComponent() {
                     <td className="px-6 py-4">{partDetail.part}</td>
                     <td className="px-6 py-4">{partDetail.size}</td>
                     <td className="px-6 py-4">{partDetail.model}</td>
-                    <td className="px-6 py-4">{partDetail.machine}</td>
-                    <td className="px-6 py-4">{partDetail.line}</td>
                     <td className="px-6 py-4">{partDetail.location}</td>
                     <td className="px-6 py-4">
                       {partDetail.status && (
@@ -251,39 +234,6 @@ function TableComponent() {
               </tbody>
             </table>
           </div>
-        )}
-        {activeTab === "Delivered" && (
-          <table className="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-white uppercase bg-[#3E3B64] dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" className="px-6 py-3">
-                  Order
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Customer
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Status
-                </th>
-                <th scope="col" className="px-6 py-3"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="odd:bg-[#3E3B64] even:bg-[#4D4B6C] text-white">
-                <td className="px-6 py-4">Order 1</td>
-                <td className="px-6 py-4">Customer A</td>
-                <td className="px-6 py-4">Delivered</td>
-                <td className="px-6 py-4">
-                  <a
-                    href="#"
-                    className="font-medium text-white bg-[#55BED2] px-2 py-1 rounded dark:text-blue-500 hover:bg-blue-700"
-                  >
-                    View Details
-                  </a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
         )}
       </div>
     </div>

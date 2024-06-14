@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-//import Modal from "@/app/components/ui/partHistory";
 import Lottie from "lottie-react";
 import notfound from "@/app/images/404.json";
 
@@ -63,17 +62,17 @@ const TableComponent: React.FC = () => {
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <div className="overflow-x-auto whitespace-nowrap pl-4 py-2 text-md bg-[#3E3B64] text-white">
+      <div className="overflow-x-auto whitespace-nowrap pl-4 py-2 text-lg bg-[#3E3B64] text-white">
         <div className="flex justify-between items-center border-b">
           <div className="flex space-x-4">
             <span
               className={`cursor-pointer ${activeTab === "Line Monitoring"
-                ? "text-blue-400 border-b-2 border-blue-400"
+                ? "text-white border-blue-400"
                 : ""
                 }`}
               onClick={() => setActiveTab("Line Monitoring")}
             >
-              Part History
+              Model List
             </span>
           </div>
         </div>
@@ -100,7 +99,7 @@ const TableComponent: React.FC = () => {
                   <li
                     key={index}
                     onClick={() => handleProcessSelect(process)}
-                    className="px-4 py-2 hover:bg-gray-200 cursor-pointer text-gray-700"
+                    className="px-4 py-2 hover:bg-gray-200 rounded-lg cursor-pointer text-gray-700"
                   >
                     {process}
                   </li>
@@ -109,55 +108,68 @@ const TableComponent: React.FC = () => {
             </div>
           )}
         </div>
+        {selectedProcess && (
+          <div className="text-md text-white pl-4">
+            {filteredModels.length} Model{filteredModels.length !== 1 ? 's' : ''} found for {selectedProcess}
+          </div>
+        )}
       </div>
       {selectedProcess ? (
         <>
-          <div className="py-3 overflow-x-auto">
-            <table className="min-w-full text-sm text-center text-gray-500 dark:text-gray-400">
-              <thead className="text-xs uppercase bg-[#3E3B64] text-white border-b">
-                <tr>
-                  <th scope="col" className="px-6 py-3">
-                    No
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Model Name
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Process Name
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentItems.map((part, index) => (
-                  <tr
-                    key={index}
-                    className={`${index % 2 === 0
-                      ? "odd:bg-[#3E3B64] odd:dark:bg-[#4D4B6C]"
-                      : "even:bg-[#4D4B6C] even:dark:bg-[#3E3B64]"
-                      } text-white`}
-                  >
-                    <td className="px-6 py-4">{indexOfFirstItem + index + 1}</td>
-                    <td className="px-6 py-4">{part.model_name}</td>
-                    <td className="px-6 py-4">{part.process_name}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="flex justify-center mt-4 pb-4">
-            {Array.from({ length: Math.ceil(filteredModels.length / itemsPerPage) }).map(
-              (_, index) => (
-                <button
-                  key={index}
-                  onClick={() => paginate(index + 1)}
-                  className={`mx-1 px-3 py-1  rounded ${currentPage === index + 1 ? "bg-blue-500 text-white" : "bg-white text-black"
-                    }`}
-                >
-                  {index + 1}
-                </button>
-              )
-            )}
-          </div>
+          {filteredModels.length > 0 ? (
+            <>
+              <div className="py-3 overflow-x-auto">
+                <table className="min-w-full text-sm text-center text-gray-500 dark:text-gray-400">
+                  <thead className="text-xs uppercase bg-[#3E3B64] text-white border-b">
+                    <tr>
+                      <th scope="col" className="px-6 py-3">
+                        No
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        Model Name
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        Process Name
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {currentItems.map((part, index) => (
+                      <tr
+                        key={index}
+                        className={`${index % 2 === 0
+                          ? "odd:bg-[#3E3B64] odd:dark:bg-[#4D4B6C]"
+                          : "even:bg-[#4D4B6C] even:dark:bg-[#3E3B64]"
+                          } text-white`}
+                      >
+                        <td className="px-6 py-4">{indexOfFirstItem + index + 1}</td>
+                        <td className="px-6 py-4">{part.model_name}</td>
+                        <td className="px-6 py-4">{part.process_name}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="flex justify-center mt-4 pb-4">
+                {Array.from({ length: Math.ceil(filteredModels.length / itemsPerPage) }).map(
+                  (_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => paginate(index + 1)}
+                      className={`mx-1 px-3 py-1  rounded ${currentPage === index + 1 ? "bg-blue-500 text-white" : "bg-white text-black"
+                        }`}
+                    >
+                      {index + 1}
+                    </button>
+                  )
+                )}
+              </div>
+            </>
+          ) : (
+            <div className="py-4 text-center text-white">
+              No models found for "{searchQuery}" in {selectedProcess}
+            </div>
+          )}
         </>
       ) : (
         <div className="py-4 text-center text-white">
@@ -165,7 +177,7 @@ const TableComponent: React.FC = () => {
             animationData={notfound}
             style={{ height: "225px", width: "150px", margin: "0 auto" }}
           />
-          Please choose a process!
+          Please select a process!
         </div>
       )}
     </div>
@@ -173,3 +185,4 @@ const TableComponent: React.FC = () => {
 };
 
 export default TableComponent;
+
