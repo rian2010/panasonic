@@ -10,11 +10,12 @@ import {
   Bars3Icon,
   XMarkIcon,
   ChevronRightIcon,
-  ChevronDownIcon
+  ChevronDownIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "@/app/images/pn1-removebg-preview.png";
+import { signOut } from "next-auth/react";
 
 function SideNav() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -31,18 +32,31 @@ function SideNav() {
   return (
     <>
       <button
-        className={`fixed top-4 ${isSidebarOpen ? 'left-[268px]' : 'left-4'} z-50 md:hidden md:left-4 p-2 rounded bg-[#17163F] text-white transition-all duration-300 ease-in-out`}
+        className={`fixed top-4 ${
+          isSidebarOpen ? "left-[268px]" : "left-4"
+        } z-50 md:hidden md:left-4 p-2 rounded bg-[#17163F] text-white transition-all duration-300 ease-in-out`}
         onClick={toggleSidebar}
       >
-        {isSidebarOpen ? <XMarkIcon className="h-6 w-6" /> : <Bars3Icon className="h-6 w-6" />}
+        {isSidebarOpen ? (
+          <XMarkIcon className="h-6 w-6" />
+        ) : (
+          <Bars3Icon className="h-6 w-6" />
+        )}
       </button>
 
       <nav
-        className={`fixed top-0 left-0 h-screen w-64 bg-[#17163F] p-4 text-white transform transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-          } md:translate-x-0 md:relative md:top-auto md:left-auto z-40`}
+        className={`fixed top-0 left-0 h-screen w-64 bg-[#17163F] p-4 text-white transform transition-transform duration-300 ease-in-out ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } md:translate-x-0 md:relative md:top-auto md:left-auto z-40`}
       >
         <div className="flex items-center mb-4 pl-4 py-2">
-          <Image src={Logo} alt="General" width={180} height={100} priority={true} />
+          <Image
+            src={Logo}
+            alt="General"
+            width={180}
+            height={100}
+            priority={true}
+          />
         </div>
         <div className="pl-4">
           <Link href="/dashboard">
@@ -106,7 +120,10 @@ function SideNav() {
               <span>Settings</span>
             </div>
           </Link>
-          <div className="flex items-center cursor-pointer py-3 hover:text-[#55BED2]">
+          <div
+            className="flex items-center cursor-pointer py-3 hover:text-[#55BED2]"
+            onClick={() => signOut()}
+          >
             <ArrowLeftOnRectangleIcon className="h-5 w-5 mr-2" />
             <span>Log Out</span>
           </div>
@@ -117,4 +134,3 @@ function SideNav() {
 }
 
 export default SideNav;
-

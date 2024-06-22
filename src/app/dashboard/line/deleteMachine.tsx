@@ -34,10 +34,13 @@ export default function DeleteMachine(machine: Machine) {
 
   return (
     <div>
-       <button className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded" onClick={handleChange}>
-            Delete
-        </button>
-        <input
+      <button
+        className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded"
+        onClick={handleChange}
+      >
+        Delete
+      </button>
+      <input
         type="checkbox"
         checked={modal}
         onChange={handleChange}
