@@ -28,21 +28,28 @@ const TableComponent: React.FC = () => {
   const [machines, setMachines] = useState<Machine[]>([]); // State to store machines data
 
   useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    try {
-      const response = await fetch("/api/machine");
-      if (!response.ok) {
-        throw new Error("Failed to fetch data");
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/machine");
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const data = await response.json();
+        setMachines(data.posts);
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
-      const data = await response.json();
-      setMachines(data.posts);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+    };
+
+    // Fetch data initially
+    fetchData();
+
+    // Polling interval (e.g., every 30 seconds)
+    const interval = setInterval(fetchData, 30000); // Adjust interval as needed
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(interval);
+  }, []);
 
   const handleSort = () => {
     if (sortType === "asc") {
@@ -67,8 +74,8 @@ const TableComponent: React.FC = () => {
     machine.nama_mesin.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-   // Function to determine background color based on machine status
-   const getStatusBgColor = (status: string): string => {
+  // Function to determine background color based on machine status
+  const getStatusBgColor = (status: string): string => {
     switch (status.toLowerCase()) {
       case "safe":
         return "bg-teal-400";
@@ -98,21 +105,19 @@ const TableComponent: React.FC = () => {
         <div className="flex justify-between items-center">
           <div className="flex space-x-4">
             <span
-              className={`cursor-pointer ${
-                activeTab === "Line Monitoring"
-                  ? "text-white border-b-2 border-blue-400"
-                  : ""
-              }`}
+              className={`cursor-pointer ${activeTab === "Line Monitoring"
+                ? "text-white border-b-2 border-blue-400"
+                : ""
+                }`}
               onClick={() => setActiveTab("Line Monitoring")}
             >
               Line Monitoring
             </span>
             <span
-              className={`cursor-pointer ${
-                activeTab === "Line"
-                  ? "text-white border-b-2 border-blue-400"
-                  : ""
-              }`}
+              className={`cursor-pointer ${activeTab === "Line"
+                ? "text-white border-b-2 border-blue-400"
+                : ""
+                }`}
               onClick={() => setActiveTab("Line")}
             >
               Manage Line
@@ -136,7 +141,7 @@ const TableComponent: React.FC = () => {
         />
         {activeTab === "Line Monitoring" && (
           <div className="pr-4">
-            < AddMachine/>
+            <AddMachine />
           </div>
         )}
         {activeTab === "Line" && (
@@ -172,32 +177,37 @@ const TableComponent: React.FC = () => {
               {filteredMachines.map((machine, index) => (
                 <tr
                   key={machine.id_mesin}
-                  className={`${
-                    index % 2 === 0
-                      ? "odd:bg-[#3E3B64] odd:dark:bg-[#4D4B6C]"
-                      : "even:bg-[#4D4B6C] even:dark:bg-[#3E3B64]"
-                  } text-white`}
+                  className={`${index % 2 === 0
+                    ? "odd:bg-[#3E3B64] odd:dark:bg-[#4D4B6C]"
+                    : "even:bg-[#4D4B6C] even:dark:bg-[#3E3B64]"
+                    } text-white`}
                 >
                   <td className="px-6 py-4">{machine.nama_line}</td>
                   <td className="px-6 py-4">{machine.nama_mesin}</td>
-                  <td className="px-6 py-4">{machine.suhu ? `${machine.suhu} °C` : <span className="text-gray-400">None</span>}</td>
                   <td className="px-6 py-4">
-                  {machine.status ? (
-                    <span
-                      className={`px-4 py-2 rounded-full ${getStatusBgColor(
-                        machine.status
-                      )} text-blue-900 font-bold`}
-                    >
-                      {machine.status}
-                    </span>
-                  ) : (
-                    <span className="text-gray-400">None</span>
-                  )}
+                    {machine.suhu ? (
+                      `${machine.suhu} °C`
+                    ) : (
+                      <span className="text-gray-400">None</span>
+                    )}
+                  </td>
+                  <td className="px-6 py-4">
+                    {machine.status ? (
+                      <span
+                        className={`px-4 py-2 rounded-full ${getStatusBgColor(
+                          machine.status
+                        )} text-blue-900 font-bold`}
+                      >
+                        {machine.status}
+                      </span>
+                    ) : (
+                      <span className="text-gray-400">None</span>
+                    )}
                   </td>
                   <td className="px-6 py-4 flex space-x-2">
-                    < UpdateMachine {...machine}/>
+                    <UpdateMachine {...machine} />
                     <DeleteMachine {...machine} />
-                    </td>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -220,22 +230,18 @@ const TableComponent: React.FC = () => {
               {lines.map((line, index) => (
                 <tr
                   key={index}
-                  className={`${
-                    index % 2 === 0
-                      ? "odd:bg-[#3E3B64] odd:dark:bg-[#4D4B6C]"
-                      : "even:bg-[#4D4B6C] even:dark:bg-[#3E3B64]"
-                  } text-white`}
+                  className={`${index % 2 === 0
+                    ? "odd:bg-[#3E3B64] odd:dark:bg-[#4D4B6C]"
+                    : "even:bg-[#4D4B6C] even:dark:bg-[#3E3B64]"
+                    } text-white`}
                 >
                   <td className="px-6 py-4">{line.line}</td>
-                  <td className="px-6 py-4">{line.status}</td>
                   <td className="px-6 py-4">
-                    {line.status && (
-                      <span
-                        className={`px-4 py-2 rounded-full ${line.lineColor} text-blue-900 font-bold`}
-                      >
-                        {line.status}
-                      </span>
-                    )}
+                    <span
+                      className={`inline-flex items-center justify-center px-4 py-2 rounded-full ${line.lineColor} text-blue-900 font-bold`}
+                    >
+                      {line.status}
+                    </span>
                   </td>
                   <td className="px-6 py-4 flex space-x-2">
                     <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
@@ -256,3 +262,4 @@ const TableComponent: React.FC = () => {
 };
 
 export default TableComponent;
+

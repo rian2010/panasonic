@@ -1,7 +1,20 @@
+'use client';
+
 import React from "react";
 import { BellIcon, UserCircleIcon } from "@heroicons/react/24/outline";
+import { useSession } from "next-auth/react";
 
 function Navbar() {
+  const { data: session, status } = useSession();
+
+
+
+  if (!session) {
+    return null; // Optional: You can redirect to login page or show a login button
+  }
+
+  const user = session.user;
+
   return (
     <div className="flex items-center justify-end p-4 text-white">
       <div className="flex items-center">
@@ -10,8 +23,8 @@ function Navbar() {
         <div className="flex items-center ml-4">
           <UserCircleIcon className="h-10 w-10 text-white" />
           <div className="ml-4 text-right">
-            <div className="font-semibold">Admin</div>
-            <div className="text-sm text-gray-300">Admin</div>
+            <div className="font-semibold">{user?.username || "Username"}</div>
+            <div className="text-sm text-gray-300">{user?.role || "Role"}</div>
           </div>
         </div>
       </div>

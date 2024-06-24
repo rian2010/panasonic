@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import { PlusIcon } from "@heroicons/react/24/outline";
 
 interface Line {
-    id_line: number;
-    nama_line: string;
-  }
+  id_line: number;
+  nama_line: string;
+}
 
 export default function AddMachine() {
   const [idline, setId] = useState("");
@@ -65,7 +65,10 @@ export default function AddMachine() {
 
   return (
     <div>
-      <button className="text-sm bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-xl flex items-center space-x-2" onClick={handleChange}>
+      <button
+        className="text-sm bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-xl flex items-center space-x-2"
+        onClick={handleChange}
+      >
         <PlusIcon className="w-6 h-6" />
         <span>Add Machine</span>
       </button>
@@ -79,17 +82,19 @@ export default function AddMachine() {
 
       <div className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg">Add New Machine</h3>
+          <h3 className="font-bold text-lg text-black">Add New Machine</h3>
           <form onSubmit={handleSubmit}>
             <div className="form-control">
-              <label className="label font-bold">Line</label>
+              <label className="label font-bold text-black">Line</label>
               <select
                 value={idline}
                 onChange={(e) => setId(e.target.value)}
-                className="select w-full select-bordered"
+                className="select w-full select-bordered text-black"
                 required
               >
-                <option value="" disabled>Pilih Line</option>
+                <option value="" disabled>
+                  Pilih Line
+                </option>
                 {lines.map((line) => (
                   <option key={line.id_line} value={line.id_line}>
                     {line.nama_line}
@@ -98,12 +103,12 @@ export default function AddMachine() {
               </select>
             </div>
             <div className="form-control">
-              <label className="label font-bold">Machine</label>
+              <label className="label font-bold text-black">Machine</label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="input w-full input-bordered"
+                className="input w-full input-bordered text-black"
                 placeholder="Nama Mesin"
                 required
               />

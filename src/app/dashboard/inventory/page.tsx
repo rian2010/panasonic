@@ -11,7 +11,6 @@ export default function Page() {
   const charts = [
     <BarChartContainer key={0} />,
     <BarChartContainer key={1} />,
-    <ProgressDonutChart key={2} />
   ];
 
   const handleNextClick = () => {
@@ -25,7 +24,7 @@ export default function Page() {
   return (
     <div className="min-h-screen p-8 text-white">
       {/* Display charts side-by-side on larger screens */}
-      <div className="hidden md:grid md:grid-cols-3 gap-4 mb-6">
+      <div className="hidden md:grid md:grid-cols-2 gap-4 mb-6">
         {charts.map((chart, index) => (
           <div className="bg-[#3E3B64] p-4 rounded-lg" key={index}>
             {chart}

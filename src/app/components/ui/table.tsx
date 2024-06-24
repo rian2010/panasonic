@@ -32,7 +32,7 @@ function TableComponent() {
       machine: "Machine A",
       line: 1,
       location: "Shelf 1",
-      status: "Unused",
+      status: "Available",
       statusColor: "bg-[#53DFB5]",
     },
     {
@@ -52,7 +52,7 @@ function TableComponent() {
       machine: "Machine A",
       line: 1,
       location: "Shelf 1",
-      status: "Used",
+      status: "Production",
       statusColor: "bg-[#FF949F]",
     },
   ];
@@ -158,12 +158,11 @@ function TableComponent() {
                   <td className="px-6 py-4">{part.model}</td>
                   <td className="px-6 py-4">{part.quantity}</td>
                   <td className="px-6 py-4">
-                    <a
-                      href="#"
-                      className=" font-medium text-white bg-[#55BED2] px-2 py-1 rounded dark:text-blue-500 hover:bg-blue-700"
+                    <button
+                      className="font-medium text-white bg-[#55BED2] px-2 py-1 rounded dark:text-blue-500 hover:bg-blue-700"
                     >
-                      View Details
-                    </a>
+                      View details
+                    </button>
                   </td>
                 </tr>
               ))}

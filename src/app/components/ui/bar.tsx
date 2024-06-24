@@ -23,7 +23,7 @@ const PartTypesComponent = () => {
       <div className="flex justify-between mb-4">
         <div className="flex items-center">
           <span className="block w-4 h-4 bg-green-400 mr-2 rounded-full"></span>
-          <span>Unused</span>
+          <span>Available</span>
         </div>
         <div className="flex items-center">
           <span className="block w-4 h-4 bg-blue-400 mr-2 rounded-full"></span>
@@ -31,7 +31,7 @@ const PartTypesComponent = () => {
         </div>
         <div className="flex items-center">
           <span className="block w-4 h-4 bg-red-400 mr-2 rounded-full"></span>
-          <span>Used</span>
+          <span>Production</span>
         </div>
       </div>
       <div className="relative h-4 rounded-full overflow-hidden bg-gray-700">
@@ -54,7 +54,7 @@ const PartTypesComponent = () => {
           }}
         ></div>
       </div>
-      <div className="mt-4 text-sm text-gray-400 py-4">As of {currentDate}</div>
+      <div className="mt-4 text-md text-white py-4">As of {currentDate}</div>
     </div>
   );
 };

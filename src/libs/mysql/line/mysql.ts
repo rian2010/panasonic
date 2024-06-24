@@ -1,29 +1,20 @@
-import mysql from 'mysql2/promise';
-
-// Configure the database connection
-const dbConfig = {
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_SCHEMA,
-    waitForConnections: true,
-};
+import * as mysql from "mysql2/promise";
+import pool from "../../mysql";
 
 // Create a connection pool
-const pool = mysql.createPool(dbConfig);
 
 type Post = {
-    id_line: string;
-    nama_line: string;
-    status_line: string;
+  id_line: string;
+  nama_line: string;
+  status_line: string;
 };
 
 export const getPosts = async (): Promise<Post[]> => {
-    const [rows] = await pool.query('SELECT * FROM line');
-    return rows as Post[];
+  const [rows] = await pool.query("SELECT * FROM line");
+  return rows as Post[];
 };
 
-// ubah dulu, sesuaikan dengan line
+// //ubah dulu, sesuaikan dengan line
 // export const addPost = async (post: Post): Promise<void> => {
 //     const { id_mesin, id_line, nama_mesin } = post;
 //     await pool.query('INSERT INTO mesin (id_mesin, id_line, nama_mesin) VALUES (?, ?, ?)', [id_mesin, id_line, nama_mesin]);

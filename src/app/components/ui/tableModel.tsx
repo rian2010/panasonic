@@ -60,6 +60,8 @@ const TableComponent: React.FC = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredModels.slice(indexOfFirstItem, indexOfLastItem);
 
+  const totalPages = Math.ceil(filteredModels.length / itemsPerPage);
+
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
       <div className="overflow-x-auto whitespace-nowrap pl-4 py-2 text-lg bg-[#3E3B64] text-white">
@@ -129,7 +131,10 @@ const TableComponent: React.FC = () => {
                         Model Name
                       </th>
                       <th scope="col" className="px-6 py-3">
-                        Process Name
+                        Details
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+
                       </th>
                     </tr>
                   </thead>
@@ -144,25 +149,47 @@ const TableComponent: React.FC = () => {
                       >
                         <td className="px-6 py-4">{indexOfFirstItem + index + 1}</td>
                         <td className="px-6 py-4">{part.model_name}</td>
-                        <td className="px-6 py-4">{part.process_name}</td>
+                        <td className="px-6 py-4">
+                          <button
+                            className="font-medium text-white bg-[#55BED2] px-2 py-1 rounded dark:text-blue-500 hover:bg-blue-700"
+                          >
+                            View details
+                          </button>
+                        </td>
+                        <td className="px-6 py-4 flex space-x-2">
+                          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Edit
+                          </button>
+                          <button className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded">
+                            Delete
+                          </button>
+                        </td>
+
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
               <div className="flex justify-center mt-4 pb-4">
-                {Array.from({ length: Math.ceil(filteredModels.length / itemsPerPage) }).map(
-                  (_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => paginate(index + 1)}
-                      className={`mx-1 px-3 py-1  rounded ${currentPage === index + 1 ? "bg-blue-500 text-white" : "bg-white text-black"
-                        }`}
-                    >
-                      {index + 1}
-                    </button>
-                  )
-                )}
+                <div className="join">
+                  <button
+                    className={`join-item btn ${currentPage === 1 ? "cursor-not-allowed opacity-50" : ""}`}
+                    onClick={() => paginate(Math.max(currentPage - 1, 1))}
+                    disabled={currentPage === 1}
+                  >
+                    «
+                  </button>
+                  <button className="join-item btn">
+                    Page {currentPage} of {totalPages}
+                  </button>
+                  <button
+                    className={`join-item btn ${currentPage === totalPages ? "cursor-not-allowed opacity-50" : ""}`}
+                    onClick={() => paginate(Math.min(currentPage + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                  >
+                    »
+                  </button>
+                </div>
               </div>
             </>
           ) : (
