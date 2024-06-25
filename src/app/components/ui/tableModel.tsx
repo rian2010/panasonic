@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Lottie from "lottie-react";
 import notfound from "@/app/images/404.json";
+import DetailsModal from "@/app/components/ui/modalModel";
 
 interface Parts {
   model_id: number;
@@ -16,6 +17,8 @@ const TableComponent: React.FC = () => {
   const [selectedProcess, setSelectedProcess] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [selectedPart, setSelectedPart] = useState<Parts | null>(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     fetchModels();
@@ -61,6 +64,16 @@ const TableComponent: React.FC = () => {
   const currentItems = filteredModels.slice(indexOfFirstItem, indexOfLastItem);
 
   const totalPages = Math.ceil(filteredModels.length / itemsPerPage);
+
+  const handleViewDetails = (part: Parts) => {
+    setSelectedPart(part);
+    setIsModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setIsModalVisible(false);
+    setSelectedPart(null);
+  };
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -152,6 +165,7 @@ const TableComponent: React.FC = () => {
                         <td className="px-6 py-4">
                           <button
                             className="font-medium text-white bg-[#55BED2] px-2 py-1 rounded dark:text-blue-500 hover:bg-blue-700"
+                            onClick={() => handleViewDetails(part)}
                           >
                             View details
                           </button>
@@ -164,7 +178,6 @@ const TableComponent: React.FC = () => {
                             Delete
                           </button>
                         </td>
-
                       </tr>
                     ))}
                   </tbody>
@@ -207,6 +220,11 @@ const TableComponent: React.FC = () => {
           Please select a process!
         </div>
       )}
+      <DetailsModal
+        isVisible={isModalVisible}
+        onClose={closeModal}
+        part={selectedPart}
+      />
     </div>
   );
 };
