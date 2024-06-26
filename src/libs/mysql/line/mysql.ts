@@ -14,6 +14,11 @@ export const getPosts = async (): Promise<Post[]> => {
   return rows as Post[];
 };
 
+export const getPostsStatus = async (): Promise<Post[]> => {
+  const [rows] = await pool.query("SELECT * FROM line WHERE line.status_line = 'Return'");
+  return rows as Post[];
+};
+
 // //ubah dulu, sesuaikan dengan line
 // export const addPost = async (post: Post): Promise<void> => {
 //     const { id_mesin, id_line, nama_mesin } = post;

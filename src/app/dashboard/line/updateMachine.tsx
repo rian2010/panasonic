@@ -10,11 +10,16 @@ type Machine = {
 };
 
 interface Line {
-  id_line: number;
-  nama_line: string;
-}
+    id_line: number;
+    nama_line: string;
+};
 
-export default function UpdateMachine(machine: Machine) {
+type UpdateMachineProps = {
+  machine: Machine;
+  onMachineUpdate: () => void;
+};
+
+export default function UpdateMachine({ machine, onMachineUpdate }: UpdateMachineProps) {
   const [idline, setId] = useState(machine.id_line);
   const [namamesin, setName] = useState(machine.nama_mesin);
   const [modal, setModal] = useState(false);
@@ -60,6 +65,9 @@ export default function UpdateMachine(machine: Machine) {
 
     router.refresh();
     setModal(false);
+
+    onMachineUpdate();
+
   }
 
   function handleChange() {
@@ -68,12 +76,9 @@ export default function UpdateMachine(machine: Machine) {
 
   return (
     <div>
-      <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        onClick={handleChange}
-      >
+    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleChange}>
         Edit
-      </button>
+    </button>
       <input
         type="checkbox"
         checked={modal}
@@ -83,11 +88,9 @@ export default function UpdateMachine(machine: Machine) {
 
       <div className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg text-black">
-            Edit Machine {machine.nama_mesin}
-          </h3>
+          <h3 className="font-bold text-lg">Edit {machine.nama_mesin}</h3>
           <form onSubmit={handleUpdate}>
-            <div className="form-control text-black">
+            <div className="form-control">
               <label className="label font-bold">Line</label>
               <select
                 value={idline}
@@ -95,9 +98,7 @@ export default function UpdateMachine(machine: Machine) {
                 className="select w-full select-bordered"
                 required
               >
-                <option value="" disabled>
-                  Pilih Line
-                </option>
+                <option value="" disabled>Pilih Line</option>
                 {lines.map((line) => (
                   <option key={line.id_line} value={line.id_line}>
                     {line.nama_line}
@@ -113,7 +114,7 @@ export default function UpdateMachine(machine: Machine) {
                 required
               /> */}
             </div>
-            <div className="form-control text-black">
+            <div className="form-control">
               <label className="label font-bold">Nama Mesin</label>
               <input
                 type="text"

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { deletePost, getById, updatePost } from '../../../../../libs/mysql/machine/mysql';
+import { deletePost, getById, updatePost } from '../../../../libs/mysql/machine/mysql';
 
 // GET Post by ID
 export const GET = async (req: NextRequest, { params }: { params: { id: string } }) => {

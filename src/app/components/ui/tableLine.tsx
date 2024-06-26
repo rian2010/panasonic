@@ -28,28 +28,25 @@ const TableComponent: React.FC = () => {
   const [machines, setMachines] = useState<Machine[]>([]); // State to store machines data
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("/api/machine");
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        const data = await response.json();
-        setMachines(data.posts);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    // Fetch data initially
     fetchData();
 
-    // Polling interval (e.g., every 30 seconds)
-    const interval = setInterval(fetchData, 30000); // Adjust interval as needed
+    const intervalId = setInterval(fetchData, 10000);
 
-    // Cleanup interval on component unmount
-    return () => clearInterval(interval);
+    return () => clearInterval(intervalId);
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch("/api/machine");
+      if (!response.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const data = await response.json();
+      setMachines(data.posts);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const handleSort = () => {
     if (sortType === "asc") {
@@ -86,6 +83,18 @@ const TableComponent: React.FC = () => {
       default:
         return "";
     }
+  };
+
+  const menghandleMachineAdded = () => {
+    fetchData();
+  };
+
+  const menghandleMachineDeleted = () => {
+    fetchData();
+  };
+
+  const menghandleMachineUpdate = () => {
+    fetchData();
   };
 
   return (
@@ -141,7 +150,7 @@ const TableComponent: React.FC = () => {
         />
         {activeTab === "Line Monitoring" && (
           <div className="pr-4">
-            <AddMachine />
+            < AddMachine onMachineAdded={menghandleMachineAdded}/>
           </div>
         )}
         {activeTab === "Line" && (
@@ -205,8 +214,8 @@ const TableComponent: React.FC = () => {
                     )}
                   </td>
                   <td className="px-6 py-4 flex space-x-2">
-                    <UpdateMachine {...machine} />
-                    <DeleteMachine {...machine} />
+                    < UpdateMachine machine={machine} onMachineUpdate={menghandleMachineUpdate}/>
+                    <DeleteMachine machine={machine} onMachineDeleted={menghandleMachineDeleted} />
                   </td>
                 </tr>
               ))}
