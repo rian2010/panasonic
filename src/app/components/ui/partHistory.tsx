@@ -11,7 +11,7 @@ const Modal: FC<ModalProps> = ({ isVisible, onClose, children }) => {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-75">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-4xl sm:w-full max-h-screen">
         <div className="flex flex-col h-full">
           <div className="px-4 sm:px-6 py-4 bg-white border-b">
@@ -66,7 +66,7 @@ const Modal: FC<ModalProps> = ({ isVisible, onClose, children }) => {
                       <div className="flex w-0 flex-1 items-center">
                         <PaperClipIcon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
                         <div className="ml-4 flex min-w-0 flex-1 gap-2">
-                          <span className="truncate font-medium">resume_back_end_developer.png</span>
+                          <span className="truncate font-medium">anomalies.png</span>
                           <span className="flex-shrink-0 text-gray-400">2.4mb</span>
                         </div>
                       </div>
@@ -80,7 +80,7 @@ const Modal: FC<ModalProps> = ({ isVisible, onClose, children }) => {
                       <div className="flex w-0 flex-1 items-center">
                         <PaperClipIcon className="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
                         <div className="ml-4 flex min-w-0 flex-1 gap-2">
-                          <span className="truncate font-medium">coverletter_back_end_developer.png</span>
+                          <span className="truncate font-medium">abnormal-part.png</span>
                           <span className="flex-shrink-0 text-gray-400">4.5mb</span>
                         </div>
                       </div>

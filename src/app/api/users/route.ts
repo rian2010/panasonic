@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/libs/mysql";
+import { addUser } from "@/libs/mysql/user/mysql";
 
 export async function GET(request: NextRequest) {
   const session = request.cookies.get("session");
@@ -23,3 +24,17 @@ export async function GET(request: NextRequest) {
 
   return NextResponse.json({ user });
 }
+
+export const POST = async (req: Request, res: Response) => {
+  console.log("POST BERHASIL");
+
+  const { id, employeeid, username, password, role } = await req.json();
+
+  try {
+    const post = { employeeid, username, password, role, id: Date.now().toString() };
+    await addUser(post);
+    return NextResponse.json({ message: "OK", post }, { status: 200 });
+  } catch (err) {
+    return NextResponse.json({ message: "Error", err }, { status: 500 });
+  }
+};

@@ -1,21 +1,36 @@
-'use client'
+'use client';
 
 import Image from 'next/image';
 import bg from '@/app/images/bg.jpg';
 import Logo from '@/app/images/remove-bg.png';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import Modal from '@/app/components/ui/succes';
 
 export default function Login() {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const savedUsername = localStorage.getItem("username");
+    const savedPassword = localStorage.getItem("password");
+    if (savedUsername && savedPassword) {
+      setUsername(savedUsername);
+      setPassword(savedPassword);
+      setRememberMe(true);
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     const res = await signIn("credentials", {
       redirect: false,
@@ -24,11 +39,25 @@ export default function Login() {
       callbackUrl: "/dashboard",
     });
 
+    setLoading(false);
+
     if (res?.error) {
       setError("Invalid username or password");
     } else {
-      router.push("/dashboard");
+      if (rememberMe) {
+        localStorage.setItem("username", username);
+        localStorage.setItem("password", password);
+      } else {
+        localStorage.removeItem("username");
+        localStorage.removeItem("password");
+      }
+      setShowModal(true);
     }
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    router.push("/dashboard");
   };
 
   return (
@@ -57,7 +86,7 @@ export default function Login() {
                 </label>
                 <input
                   type="text"
-                  name="text"
+                  name="username"
                   id="username"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="~"
@@ -84,6 +113,11 @@ export default function Login() {
                   required
                 />
               </div>
+              {error && (
+                <div className="text-red-600 text-sm">
+                  {error}
+                </div>
+              )}
               <div className="flex items-center justify-between">
                 <div className="flex items-start">
                   <div className="flex items-center h-5">
@@ -92,6 +126,8 @@ export default function Login() {
                       aria-describedby="remember"
                       type="checkbox"
                       className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                      checked={rememberMe}
+                      onChange={(e) => setRememberMe(e.target.checked)}
                     />
                   </div>
                   <div className="ml-3 text-sm">
@@ -107,15 +143,22 @@ export default function Login() {
               <button
                 type="submit"
                 className="w-full text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-500 dark:hover:bg-blue-700 dark:focus:ring-primary-800"
+                disabled={loading}
               >
-                Sign in
+                {loading ? "Loading..." : "Sign in"}
               </button>
             </form>
           </div>
         </div>
       </div>
+      {loading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full" role="status">
+          </div>
+        </div>
+      )}
+      <Modal show={showModal} onClose={handleCloseModal} />
     </section>
   );
 }
-
 

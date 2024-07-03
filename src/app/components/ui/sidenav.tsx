@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   HomeIcon,
   ArchiveBoxIcon,
@@ -18,11 +18,29 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "@/app/images/pn1-removebg-preview.png";
-import { signOut } from "next-auth/react";
+import LogoutModal from './logout';
+
+// Mock function to get the user role from the request headers
+const getUserRole = async () => {
+  const response = await fetch('/api/user/role', {
+    headers: {
+      'X-User-Role': 'your-user-role-here', // Adjust this as necessary to get the role from headers
+    },
+  });
+  const data = await response.json();
+  return data.role;
+};
 
 function SideNav() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isInventorySubmenuOpen, setIsInventorySubmenuOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [userRole, setUserRole] = useState(null);
+
+  useEffect(() => {
+    // Fetch the user role when the component mounts
+    getUserRole().then((role) => setUserRole(role));
+  }, []);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -30,6 +48,14 @@ function SideNav() {
 
   const toggleInventorySubmenu = () => {
     setIsInventorySubmenuOpen(!isInventorySubmenuOpen);
+  };
+
+  const openLogoutModal = () => {
+    setIsLogoutModalOpen(true);
+  };
+
+  const closeLogoutModal = () => {
+    setIsLogoutModalOpen(false);
   };
 
   return (
@@ -135,13 +161,20 @@ function SideNav() {
           </Link>
           <div
             className="flex items-center cursor-pointer py-3 hover:text-[#55BED2]"
-            onClick={() => signOut()}
+            onClick={openLogoutModal} // Trigger the modal on click
           >
             <ArrowLeftOnRectangleIcon className="h-5 w-5 mr-2" />
             <span>Log Out</span>
           </div>
         </div>
       </nav>
+
+      {isLogoutModalOpen && (
+        <>
+          <div className="fixed inset-0 bg-black opacity-50 z-40"></div> {/* Dimming background */}
+          <LogoutModal isOpen={isLogoutModalOpen} closeModal={closeLogoutModal} />
+        </>
+      )}
     </>
   );
 }

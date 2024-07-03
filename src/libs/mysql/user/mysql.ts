@@ -23,3 +23,11 @@ export const getAuth = async (
     return null;
   }
 };
+
+export const addUser = async (post: User): Promise<void> => {
+  const { id, employeeid, username, password, role } = post;
+  await pool.query(
+    "INSERT INTO users (id, employeeid, username, password, role) VALUES (?, ?, ?, ?, ?)",
+    [id, employeeid, username, password, role]
+  );
+}

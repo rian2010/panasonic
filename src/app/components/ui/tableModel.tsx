@@ -16,7 +16,7 @@ const TableComponent: React.FC = () => {
   const [models, setModels] = useState<Parts[]>([]);
   const [selectedProcess, setSelectedProcess] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(6);
   const [selectedPart, setSelectedPart] = useState<Parts | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
 

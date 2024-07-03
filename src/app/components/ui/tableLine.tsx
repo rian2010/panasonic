@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { PlusIcon, FunnelIcon } from "@heroicons/react/24/outline";
+import { ClipLoader } from "react-spinners"; // Import loading spinner
 import AddMachine from "@/app/dashboard/line/addMachine";
 import DeleteMachine from "@/app/dashboard/line/deleteMachine";
 import UpdateMachine from "@/app/dashboard/line/updateMachine";
@@ -26,9 +27,11 @@ const TableComponent: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false); // State to manage modal visibility
   const [machines, setMachines] = useState<Machine[]>([]); // State to store machines data
+  const [loading, setLoading] = useState(true); // State to manage loading
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true); // Set loading to true before fetching data
       try {
         const response = await fetch("/api/machine");
         if (!response.ok) {
@@ -38,6 +41,8 @@ const TableComponent: React.FC = () => {
         setMachines(data.posts);
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false); // Set loading to false after data is fetched
       }
     };
 
@@ -154,107 +159,119 @@ const TableComponent: React.FC = () => {
         )}
       </div>
       <div className="py-3 overflow-x-auto">
-        {activeTab === "Line Monitoring" && (
-          <table className="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead className="text-xs uppercase bg-[#3E3B64] text-white border-b">
-              <tr>
-                <th scope="col" className="px-6 py-3">
-                  Line
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Machines
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Temperature
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Temperature Status
-                </th>
-                <th scope="col" className="px-6 py-3"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredMachines.map((machine, index) => (
-                <tr
-                  key={machine.id_mesin}
-                  className={`${index % 2 === 0
-                    ? "odd:bg-[#3E3B64] odd:dark:bg-[#4D4B6C]"
-                    : "even:bg-[#4D4B6C] even:dark:bg-[#3E3B64]"
-                    } text-white`}
-                >
-                  <td className="px-6 py-4">{machine.nama_line}</td>
-                  <td className="px-6 py-4">{machine.nama_mesin}</td>
-                  <td className="px-6 py-4">
-                    {machine.suhu ? (
-                      `${machine.suhu} °C`
-                    ) : (
-                      <span className="text-gray-400">None</span>
-                    )}
-                  </td>
-                  <td className="px-6 py-4">
-                    {machine.status ? (
-                      <span
-                        className={`px-4 py-2 rounded-full ${getStatusBgColor(
-                          machine.status
-                        )} text-blue-900 font-bold`}
-                      >
-                        {machine.status}
-                      </span>
-                    ) : (
-                      <span className="text-gray-400">None</span>
-                    )}
-                  </td>
-                  <td className="px-6 py-4 flex space-x-2">
-                    <UpdateMachine {...machine} />
-                    <DeleteMachine {...machine} />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-        {activeTab === "Line" && (
-          <table className="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead className="text-xs uppercase bg-[#3E3B64] text-white border-b">
-              <tr>
-                <th scope="col" className="px-6 py-3">
-                  Line
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Status
-                </th>
-                <th scope="col" className="px-6 py-3"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {lines.map((line, index) => (
-                <tr
-                  key={index}
-                  className={`${index % 2 === 0
-                    ? "odd:bg-[#3E3B64] odd:dark:bg-[#4D4B6C]"
-                    : "even:bg-[#4D4B6C] even:dark:bg-[#3E3B64]"
-                    } text-white`}
-                >
-                  <td className="px-6 py-4">{line.line}</td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`inline-flex items-center justify-center px-4 py-2 rounded-full ${line.lineColor} text-blue-900 font-bold`}
+        {loading ? ( // Show loading spinner if loading state is true
+          <div className="flex justify-center items-center">
+            <ClipLoader color="#4D4B6C" loading={loading} size={50} />
+          </div>
+        ) : (
+          <>
+            {activeTab === "Line Monitoring" && (
+              <table className="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead className="text-xs uppercase bg-[#3E3B64] text-white border-b">
+                  <tr>
+                    <th scope="col" className="px-6 py-3">
+                      Line
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Machines
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Model
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Temperature
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Temperature Status
+                    </th>
+                    <th scope="col" className="px-6 py-3"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredMachines.map((machine, index) => (
+                    <tr
+                      key={machine.id_mesin}
+                      className={`${index % 2 === 0
+                        ? "odd:bg-[#3E3B64] odd:dark:bg-[#4D4B6C]"
+                        : "even:bg-[#4D4B6C] even:dark:bg-[#3E3B64]"
+                        } text-white`}
                     >
-                      {line.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 flex space-x-2">
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                      Edit
-                    </button>
-                    <button className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded">
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                      <td className="px-6 py-4">{machine.nama_line}</td>
+                      <td className="px-6 py-4">{machine.nama_mesin}</td>
+                      <td className="px-6 py-4">model model</td>
+                      <td className="px-6 py-4">
+                        {machine.suhu ? (
+                          `${machine.suhu} °C`
+                        ) : (
+                          <span className="text-gray-400">None</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4">
+                        {machine.status ? (
+                          <span
+                            className={`px-4 py-2 rounded-full ${getStatusBgColor(
+                              machine.status
+                            )} text-blue-900 font-bold`}
+                          >
+                            {machine.status}
+                          </span>
+                        ) : (
+                          <span className="text-gray-400">None</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 flex space-x-2">
+                        <UpdateMachine {...machine} />
+                        <DeleteMachine {...machine} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+            {activeTab === "Line" && (
+              <table className="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead className="text-xs uppercase bg-[#3E3B64] text-white border-b">
+                  <tr>
+                    <th scope="col" className="px-6 py-3">
+                      Line
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Status
+                    </th>
+                    <th scope="col" className="px-6 py-3"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {lines.map((line, index) => (
+                    <tr
+                      key={index}
+                      className={`${index % 2 === 0
+                        ? "odd:bg-[#3E3B64] odd:dark:bg-[#4D4B6C]"
+                        : "even:bg-[#4D4B6C] even:dark:bg-[#3E3B64]"
+                        } text-white`}
+                    >
+                      <td className="px-6 py-4">{line.line}</td>
+                      <td className="px-6 py-4">
+                        <span
+                          className={`inline-flex items-center justify-center px-4 py-2 rounded-full ${line.lineColor} text-blue-900 font-bold`}
+                        >
+                          {line.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 flex space-x-2">
+                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                          Edit
+                        </button>
+                        <button className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded">
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </>
         )}
       </div>
     </div>
