@@ -25,7 +25,23 @@ export const addPost = async (post: Post): Promise<void> => {
 };
 
 export const deletePost = async (id: string): Promise<void> => {
-  await pool.query("DELETE FROM mesin WHERE id_mesin = ?", [id]);
+  const connection = await pool.getConnection();
+  try {
+      await connection.beginTransaction();
+      
+      // * Hapus data di tabel suhu_mesin yang berhubungan dengan id_mesin
+      await connection.query('DELETE FROM suhu_mesin WHERE id_mesin = ?', [id]);
+      
+      // * Hapus data di tabel mesin
+      await connection.query('DELETE FROM mesin WHERE id_mesin = ?', [id]);
+      
+      await connection.commit();
+  } catch (error) {
+      await connection.rollback();
+      throw error;
+  } finally {
+      connection.release();
+  }
 };
 
 export const updatePost = async (

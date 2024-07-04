@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import pool from "@/libs/mysql";
+import { addPost } from "@/libs/mysql/models/mysql";
 
 export async function GET() {
   try {
@@ -22,3 +23,16 @@ export async function GET() {
   }
 }
 
+export const POST = async (req: Request, res: Response) => {
+  console.log("POST BERHASIL");
+
+  const { model_id, model_name, process_id } = await req.json();
+
+  try {
+    const post = { model_id, model_name, process_id, id: Date.now().toString() };
+    await addPost(post);
+    return NextResponse.json({ message: "OK", post }, { status: 201 });
+  } catch (err) {
+    return NextResponse.json({ message: "Error", err }, { status: 500 });
+  }
+}

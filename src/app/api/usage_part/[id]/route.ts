@@ -1,4 +1,4 @@
-import { deletePost, getById, updatePost } from '@/libs/mysql/models/mysql';
+import { deletePost, getById, updatePost } from '@/libs/mysql/usage_part/mysql';
 import { NextRequest, NextResponse } from 'next/server';
 
 // GET Post by ID
@@ -20,10 +20,10 @@ export const GET = async (req: NextRequest, { params }: { params: { id: string }
 // PUT Update Post by ID
 export const PUT = async (req: NextRequest, { params }: { params: { id: string } }) => {
     const { id } = params;
-    const { model_name, process_id } = await req.json();
+    const { status_usage } = await req.json();
 
     try {
-        await updatePost( model_name, process_id, id);
+        await updatePost( status_usage, id);
         return NextResponse.json({ message: 'OK' }, { status: 203 });
     } catch (err) {
         if (err === 'No Post Found') {

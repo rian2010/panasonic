@@ -16,7 +16,7 @@ const TableComponent: React.FC = () => {
   const [models, setModels] = useState<Parts[]>([]);
   const [selectedProcess, setSelectedProcess] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(6);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectedPart, setSelectedPart] = useState<Parts | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -144,6 +144,9 @@ const TableComponent: React.FC = () => {
                         Model Name
                       </th>
                       <th scope="col" className="px-6 py-3">
+                        Model Id
+                      </th>
+                      <th scope="col" className="px-6 py-3">
                         Details
                       </th>
                       <th scope="col" className="px-6 py-3">
@@ -162,6 +165,7 @@ const TableComponent: React.FC = () => {
                       >
                         <td className="px-6 py-4">{indexOfFirstItem + index + 1}</td>
                         <td className="px-6 py-4">{part.model_name}</td>
+                        <td className="px-6 py-4">{part.model_id}</td>
                         <td className="px-6 py-4">
                           <button
                             className="font-medium text-white bg-[#55BED2] px-2 py-1 rounded dark:text-blue-500 hover:bg-blue-700"
