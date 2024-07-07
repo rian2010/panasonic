@@ -1,5 +1,6 @@
 import mysql from "mysql2/promise";
 import pool from "../../mysql";
+import bcrypt from "bcrypt";
 
 type User = {
   id: string;
@@ -18,6 +19,7 @@ export const getAuth = async (
     [username, password]
   );
   if (rows.length > 0) {
+    console.log(rows[0]);
     return rows[0] as User[];
   } else {
     return null;
@@ -30,4 +32,4 @@ export const addUser = async (post: User): Promise<void> => {
     "INSERT INTO users (id, employeeid, username, password, role) VALUES (?, ?, ?, ?, ?)",
     [id, employeeid, username, password, role]
   );
-}
+};

@@ -1,7 +1,7 @@
 import { NextAuthOptions } from "next-auth";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getAuth } from "@/libs/mysql/user/mysql";
+import { getAuth } from "@/libs/mysql/user/mysql"; // Update the import path as needed
 
 const authOptions: NextAuthOptions = {
   session: {
@@ -13,7 +13,7 @@ const authOptions: NextAuthOptions = {
       type: "credentials",
       name: "Credentials",
       credentials: {
-        username: { label: "Username", type: "text" },
+        username: { label: "username", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
@@ -28,6 +28,7 @@ const authOptions: NextAuthOptions = {
             return {
               id: user.id,
               username: user.username,
+              employeeid: user.employeeid,
               role: user.role,
             };
           } else {
@@ -49,7 +50,6 @@ const authOptions: NextAuthOptions = {
         token.username = user.username;
         token.role = user.role;
       }
-
       return token;
     },
 
