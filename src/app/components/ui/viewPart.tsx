@@ -24,7 +24,7 @@ interface Line {
   nama_line: string;
 }
 
-const DetailsModal: React.FC<ModalProps> = ({ isVisible, onClose, part }) => {
+const DetailsModal3: React.FC<ModalProps> = ({ isVisible, onClose, part }) => {
   const [parts, setParts] = useState<Parts[]>([]);
   const [partsAvailable, setPartsAvailable] = useState<Parts[]>([]);
   const [lines, setLines] = useState<Line[]>([]);
@@ -61,7 +61,7 @@ const DetailsModal: React.FC<ModalProps> = ({ isVisible, onClose, part }) => {
 
   const fetchParts = async (modelId: number) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/usage_part/ordered/${modelId}`);
+      const response = await fetch(`http://localhost:3000/api/usage_part/completed/${modelId}`);
       if (!response.ok) {
         throw new Error("Failed to fetch parts");
       }
@@ -98,38 +98,6 @@ const DetailsModal: React.FC<ModalProps> = ({ isVisible, onClose, part }) => {
     }));
   };
 
-  const handleSubmit = async (e: SyntheticEvent) => {
-    e.preventDefault();
-    const { status_usage, id_usages } = form;
-
-    try {
-      await Promise.all(
-        id_usages.map((id_usage) =>
-          fetch(`http://localhost:3000/api/usage_part/${id_usage}`, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              status_usage,
-            }),
-          })
-        )
-      );
-
-      setForm({
-        id_line: "",
-        status_usage: "Uncompleted",
-        part_ids: [],
-        id_usages: [], // Reset this
-      });
-
-      onClose();
-    } catch (error) {
-      console.error("Error submitting form:", error);
-    }
-  };
-
   if (!isVisible || !part) {
     return null;
   }
@@ -141,7 +109,7 @@ const DetailsModal: React.FC<ModalProps> = ({ isVisible, onClose, part }) => {
           <div className="px-4 sm:px-6 py-4 bg-white border-b">
             <h3 className="text-lg font-medium leading-6 text-gray-900">Model Details {part.model_name}</h3>
           </div>
-          <form onSubmit={handleSubmit}>
+          <form>
             <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4" style={{ maxHeight: 'calc(100vh - 180px)' }}>
               <dl className="divide-y divide-gray-100">
                 {parts.map((part) => (
@@ -157,9 +125,6 @@ const DetailsModal: React.FC<ModalProps> = ({ isVisible, onClose, part }) => {
               </dl>
             </div>
             <div className="px-4 py-3 sm:px-6 bg-gray-50 flex justify-end space-x-2">
-              <button type="submit" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:w-auto sm:text-sm">
-                Allow
-              </button>
               <button
                 type="button"
                 className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:w-auto sm:text-sm"
@@ -175,4 +140,4 @@ const DetailsModal: React.FC<ModalProps> = ({ isVisible, onClose, part }) => {
   );
 };
 
-export default DetailsModal;
+export default DetailsModal3;

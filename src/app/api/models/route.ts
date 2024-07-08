@@ -6,7 +6,7 @@ export async function GET() {
   try {
     const db = await pool.getConnection();
     const query = `
-      SELECT m.model_id, m.model_name, p.process_name
+      SELECT m.model_id, m.model_name, p.process_name, p.process_id
       FROM models m
       JOIN process p ON m.process_id = p.process_id
     `;

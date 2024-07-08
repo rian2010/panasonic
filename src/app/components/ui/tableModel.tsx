@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import Lottie from "lottie-react";
 import notfound from "@/app/images/404.json";
 import DetailsModal from "@/app/components/ui/modalModel";
+import UpdateModels from "@/app/dashboard/Model/updateModel";
 
 interface Parts {
   model_id: number;
   model_name: string;
   process_name: string;
+  process_id: string;
 }
 
 const TableComponent: React.FC = () => {
@@ -49,6 +51,10 @@ const TableComponent: React.FC = () => {
 
   const paginate = (pageNumber: number) => {
     setCurrentPage(pageNumber);
+  };
+
+  const menghandleModelsUpdate = () => {
+    fetchModels();
   };
 
   const uniqueProcesses = Array.from(new Set(models.map((part) => part.process_name)));
@@ -175,12 +181,10 @@ const TableComponent: React.FC = () => {
                           </button>
                         </td>
                         <td className="px-6 py-4 flex space-x-2">
-                          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            Edit
-                          </button>
-                          <button className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded">
+                          < UpdateModels models={part} onModelsUpdate={menghandleModelsUpdate}/>
+                          {/* <button className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded">
                             Delete
-                          </button>
+                          </button> */}
                         </td>
                       </tr>
                     ))}

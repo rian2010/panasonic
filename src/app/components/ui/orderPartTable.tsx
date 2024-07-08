@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Modal from '@/app/components/ui/partHistory';
-import DetailsModal from "../takePart";
+import DetailsModal from "./takePart";
 import DetailsModal1 from "./returnPart";
 
 interface Parts {
@@ -8,6 +8,7 @@ interface Parts {
   model_name: string;
   process_name: string;
   status_usage: string;
+  nama_line: string;
   start_date: string;
   end_date: string;
 }
@@ -90,6 +91,10 @@ const TableComponent: React.FC = () => {
     setSelectedPart(null);
   };
 
+  const handleSuccess = () => {
+    fetchModels(); // Panggil fetchModels setelah berhasil
+  };
+
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
       <div className="overflow-x-auto whitespace-nowrap pl-4 py-2 text-md bg-[#3E3B64] text-white">
@@ -136,6 +141,9 @@ const TableComponent: React.FC = () => {
                 Status
               </th>
               <th scope="col" className="px-6 py-3">
+                Line
+              </th>
+              <th scope="col" className="px-6 py-3">
                 Start Date
               </th>
               <th scope="col" className="px-6 py-3">
@@ -154,37 +162,71 @@ const TableComponent: React.FC = () => {
                   } text-white`}
               >
                 <td className="px-6 py-4">{part.model_id}</td>
-                <td className="px-6 py-4">{part.model_name}</td>
+                <td className="px-6 py-4">{part.model_name} ({part.process_name})</td>
                 <td className="px-6 py-4">{part.status_usage}</td>
-                <td className="px-6 py-4">{part.start_date}</td>
-                <td className="px-6 py-4">{part.end_date}</td>
+                <td className="px-6 py-4">{part.nama_line}</td>
+                <td className="px-6 py-4">{new Date(part.start_date).toLocaleString('en-US')}</td>
+                <td className="px-6 py-4">
+                  {part.end_date ? (
+                    new Date(part.end_date).toLocaleString('en-US')
+                  ) : (
+                    <span className="text-gray-400">Null</span>
+                  )}
+                </td>             
                 <td className="px-6 py-4 flex space-x-2">
-                  <button
-                    onClick={() => handleViewDetails(part)}
-                    className="font-medium text-white bg-[#55BED2] px-2 py-1 rounded dark:text-blue-500 hover:bg-blue-700"
-                  >
-                    Take Part
-                  </button>
-                  <button
-                    onClick={() => handleViewDetails1(part)}
-                    className="font-medium text-white bg-[#55BED2] px-2 py-1 rounded dark:text-blue-500 hover:bg-blue-700"
-                  >
-                    Return Part
-                  </button>
+                  {part.status_usage === "Ordered" && (
+                    <button
+                      onClick={() => handleViewDetails(part)}
+                      className="font-medium text-white bg-[#55BED2] px-2 py-1 rounded dark:text-blue-500 hover:bg-blue-700"
+                    >
+                      Take Part
+                    </button>
+                  )}
+                  {part.status_usage === "Uncompleted" && (
+                    <button
+                      onClick={() => handleViewDetails1(part)}
+                      className="font-medium text-white bg-[#55BED2] px-2 py-1 rounded dark:text-blue-500 hover:bg-blue-700"
+                    >
+                      Return Part
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+        <div className="flex justify-center mt-4">
+          <div className="flex space-x-2 items-center">
+            {currentPage > 1 && (
+              <button
+                onClick={() => paginate(currentPage - 1)}
+                className="px-3 py-1 rounded-full bg-gray-300 text-gray-800"
+              >
+                «
+              </button>
+            )}
+            <span className="px-3 py-1 text-gray-400">Page {currentPage} of {totalPages}</span>
+            {currentPage < totalPages && (
+              <button
+                onClick={() => paginate(currentPage + 1)}
+                className="px-3 py-1 rounded-full bg-gray-300 text-gray-800"
+              >
+                »
+              </button>
+            )}
+          </div>
+        </div>
         <DetailsModal
           isVisible={isTakePartModalVisible}
           onClose={closeModal}
           part={selectedPart}
+          onSuccess={handleSuccess} // Tambahkan prop onSuccess
         />
         <DetailsModal1
           isVisible={isReturnPartModalVisible}
           onClose={closeModal}
           part={selectedPart}
+          onSuccess={handleSuccess} // Tambahkan prop onSuccess
         />
       </div>
     </div>

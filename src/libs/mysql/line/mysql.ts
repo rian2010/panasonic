@@ -30,8 +30,11 @@ export const deletePost = async (id: string): Promise<void> => {
       await connection.beginTransaction();
 
       // * Updaate data mesin jadi null di id_line karena line nya mau dihapus
-      await connection.query('UPDATE mesin SET id_line = NULL WHERE id_line = ?', [id]);
-            
+      // await connection.query('UPDATE mesin SET id_line = NULL WHERE id_line = ?', [id]);
+      await connection.query('DELETE FROM mesin WHERE id_line = ?', [id]);
+
+      await connection.query('DELETE FROM usage_part WHERE id_line = ?', [id]);
+
       // * Hapus data di tabel line
       await connection.query('DELETE FROM line WHERE id_line = ?', [id]);
       

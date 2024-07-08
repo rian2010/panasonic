@@ -9,6 +9,7 @@ interface ModalProps {
     model_name: string;
     process_name: string;
   } | null;
+  onSuccess: () => void; // Tambahkan prop onSuccess
 }
 
 interface Parts {
@@ -17,6 +18,7 @@ interface Parts {
   part_name: string;
   size: string;
   id_usage: string;
+  status_part: string;
 }
 
 interface Line {
@@ -24,7 +26,7 @@ interface Line {
   nama_line: string;
 }
 
-const DetailsModal1: React.FC<ModalProps> = ({ isVisible, onClose, part }) => {
+const DetailsModal1: React.FC<ModalProps> = ({ isVisible, onClose, part, onSuccess }) => {
   const [parts, setParts] = useState<Parts[]>([]);
   const [partsAvailable, setPartsAvailable] = useState<Parts[]>([]);
   const [lines, setLines] = useState<Line[]>([]);
@@ -32,7 +34,8 @@ const DetailsModal1: React.FC<ModalProps> = ({ isVisible, onClose, part }) => {
     id_line: "",
     status_usage: "Completed",
     part_ids: [] as string[],
-    id_usages: [] as string[], // Add this to track id_usage
+    id_usages: [] as string[],
+    status_parts: {} as { [key: string]: string },
   });
 
   useEffect(() => {
@@ -70,7 +73,11 @@ const DetailsModal1: React.FC<ModalProps> = ({ isVisible, onClose, part }) => {
       setForm((prevForm) => ({
         ...prevForm,
         part_ids: data.post.map((part: Parts) => part.part_id),
-        id_usages: data.post.map((part: Parts) => part.id_usage), // Add this to track id_usage
+        id_usages: data.post.map((part: Parts) => part.id_usage),
+        status_parts: data.post.reduce((acc: { [key: string]: string }, part: Parts) => {
+          acc[part.part_id] = part.status_part;
+          return acc;
+        }, {}),
       }));
     } catch (error) {
       console.error("Error fetching parts:", error);
@@ -98,9 +105,19 @@ const DetailsModal1: React.FC<ModalProps> = ({ isVisible, onClose, part }) => {
     }));
   };
 
+  const handleCheckboxChange = (part_id: string) => {
+    setForm((prevForm) => ({
+      ...prevForm,
+      status_parts: {
+        ...prevForm.status_parts,
+        [part_id]: prevForm.status_parts[part_id] === "Unusable" ? "Available" : "Unusable",
+      },
+    }));
+  };
+
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    const { status_usage, id_usages } = form;
+    const { status_usage, id_usages, status_parts } = form;
 
     try {
       await Promise.all(
@@ -117,13 +134,29 @@ const DetailsModal1: React.FC<ModalProps> = ({ isVisible, onClose, part }) => {
         )
       );
 
+      await Promise.all(
+        Object.entries(status_parts).map(([part_id, status_part]) =>
+          fetch(`http://localhost:3000/api/parts/unusable/${part_id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              status_part: status_part === "Unusable" ? "Unusable" : "Available",
+            }),
+          })
+        )
+      );
+
       setForm({
         id_line: "",
         status_usage: "Completed",
         part_ids: [],
-        id_usages: [], // Reset this
+        id_usages: [],
+        status_parts: {},
       });
 
+      onSuccess(); // Panggil onSuccess setelah berhasil
       onClose();
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -145,13 +178,25 @@ const DetailsModal1: React.FC<ModalProps> = ({ isVisible, onClose, part }) => {
             <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4" style={{ maxHeight: 'calc(100vh - 180px)' }}>
               <dl className="divide-y divide-gray-100">
                 {parts.map((part) => (
-                  <div key={part.part_id} className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+                  <div key={part.part_id} className="py-4 sm:grid sm:grid-cols-4 sm:gap-4">
                     <dt className="text-sm font-medium text-gray-900">Id Order</dt>
-                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{part.id_usage}</dd>
+                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-3 sm:mt-0">{part.id_usage}</dd>
+                    <dt className="text-sm font-medium text-gray-900">Id Part</dt>
+                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-3 sm:mt-0">{part.part_id}</dd>
                     <dt className="text-sm font-medium text-gray-900">Part Name</dt>
-                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{part.part_name}</dd>
+                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-3 sm:mt-0">{part.part_name}</dd>
                     <dt className="text-sm font-medium text-gray-900">Size</dt>
-                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{part.size}</dd>
+                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-3 sm:mt-0">{part.size}</dd>
+                    <dt className="text-sm font-medium text-gray-900">Status Part</dt>
+                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{part.status_part}</dd>
+                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-1 sm:mt-0">
+                      <input
+                        type="checkbox"
+                        checked={form.status_parts[part.part_id] === "Unusable"}
+                        onChange={() => handleCheckboxChange(part.part_id)}
+                      />
+                      Unusable
+                    </dd>
                   </div>
                 ))}
               </dl>

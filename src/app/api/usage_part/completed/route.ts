@@ -12,7 +12,7 @@ export async function GET() {
         LEFT JOIN parts ON parts.model_id = m.model_id
         LEFT JOIN usage_part ON usage_part.part_id = parts.part_id
         LEFT JOIN line ON line.id_line = usage_part.id_line
-        WHERE usage_part.status_usage = 'Ordered' OR usage_part.status_usage = 'Uncompleted'
+        WHERE usage_part.status_usage = 'Completed'
     `;
     const [rows] = await db.execute(query);
     db.release();

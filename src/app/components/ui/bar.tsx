@@ -8,8 +8,9 @@ const PartTypesComponent = () => {
   const used = 10; // Example data
 
   const getCurrentDate = () => {
+    const date = new Date();
     const options = { year: "numeric", month: "short", day: "numeric" };
-    return new Date().toLocaleDateString(undefined, options);
+    return `${date.toLocaleDateString('en-US', options)}`;
   };
 
   const currentDate = getCurrentDate();

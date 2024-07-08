@@ -14,6 +14,7 @@
     "apexcharts": "^3.49.2",
     "daisyui": "^4.12.2",
     "flowbite": "^2.3.0",
+    "lodash.debounce": "^4.0.8",
     "lottie-react": "^2.4.0",
     "moment-timezone": "^0.5.45",
     "mysql2": "^3.10.1",
@@ -28,6 +29,7 @@
     "react-toastify": "^10.0.5"
   },
   "devDependencies": {
+    "@types/lodash.debounce": "^4.0.9",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
