@@ -8,6 +8,10 @@ import { useEffect } from "react";
 import { getToken } from "next-auth/jwt";
 
 export default function dashboard() {
+
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  console.log(session);
   return (
     <div className="min-h-screen p-8 text-white">
       <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-6">

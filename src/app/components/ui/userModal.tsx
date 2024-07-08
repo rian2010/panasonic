@@ -12,11 +12,22 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const [employeeid, setEmployeeId] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
-  const [isLoading, setLoading] = useState(false); // State to manage loading state
-  const [errorMessage, setErrorMessage] = useState(""); // State to manage error message
+  const [isLoading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const validatePassword = (password: string) => {
+    const minLength = 8;
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/g;
+    return password.length >= minLength && hasSpecialChar.test(password);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!validatePassword(password)) {
+      setErrorMessage("Password must be at least 8 characters long and include at least one special character.");
+      return;
+    }
 
     setLoading(true);
     setErrorMessage("");

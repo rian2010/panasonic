@@ -112,7 +112,7 @@ const DetailsModal: React.FC<ModalProps> = ({ isVisible, onClose, part }) => {
           })
         )
       );
-      
+
       setForm({
         id_line: "",
         status_usage: "Ordered",
@@ -130,16 +130,16 @@ const DetailsModal: React.FC<ModalProps> = ({ isVisible, onClose, part }) => {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-75">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-4xl sm:w-full max-h-screen">
         <div className="flex flex-col h-full">
           <div className="px-4 sm:px-6 py-4 bg-white border-b">
             <h3 className="text-lg font-medium leading-6 text-gray-900">Model Details {part.model_name}</h3>
           </div>
           <form onSubmit={handleSubmit}>
-          <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4" style={{ maxHeight: 'calc(100vh - 180px)' }}>
-            <dl className="divide-y divide-gray-100">
-            {/* <table className="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400">
+            <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4" style={{ maxHeight: 'calc(100vh - 180px)' }}>
+              <dl className="divide-y divide-gray-100">
+                {/* <table className="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400">
             <thead className="text-xs uppercase bg-[#3E3B64] text-white border-b">
               <tr>
                 <th scope="col" className="px-6 py-3">
@@ -159,16 +159,16 @@ const DetailsModal: React.FC<ModalProps> = ({ isVisible, onClose, part }) => {
               ))}
             </tbody>
             </table> */}
-              {parts.map((part) => (
-                <div key={part.part_id} className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
-                  <dt className="text-sm font-medium text-gray-900">Part Id</dt>
-                  <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{part.part_id}</dd>
-                  <dt className="text-sm font-medium text-gray-900">Part Name</dt>
-                  <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{part.part_name}</dd>
-                  <dt className="text-sm font-medium text-gray-900">Size</dt>
-                  <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{part.size}</dd>
-                </div>
-              ))}
+                {parts.map((part) => (
+                  <div key={part.part_id} className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+                    <dt className="text-sm font-medium text-gray-900">Part Id</dt>
+                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{part.part_id}</dd>
+                    <dt className="text-sm font-medium text-gray-900">Part Name</dt>
+                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{part.part_name}</dd>
+                    <dt className="text-sm font-medium text-gray-900">Size</dt>
+                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{part.size}</dd>
+                  </div>
+                ))}
                 <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                   <dt className="text-sm font-medium text-gray-900">Line ID</dt>
                   <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
@@ -186,20 +186,20 @@ const DetailsModal: React.FC<ModalProps> = ({ isVisible, onClose, part }) => {
                     {form.part_ids.join(', ')}
                   </dd>
                 </div>
-            </dl>
-          </div>
-          <div className="px-4 py-3 sm:px-6 bg-gray-50 flex justify-end space-x-2">
-            <button type="submit" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:w-auto sm:text-sm">
-              Order
-            </button>
-            <button
-              type="button"
-              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:w-auto sm:text-sm"
-              onClick={onClose}
-            >
-              Close
-            </button>
-          </div>
+              </dl>
+            </div>
+            <div className="px-4 py-3 sm:px-6 bg-gray-50 flex justify-end space-x-2">
+              <button type="submit" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:w-auto sm:text-sm">
+                Order
+              </button>
+              <button
+                type="button"
+                className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:w-auto sm:text-sm"
+                onClick={onClose}
+              >
+                Close
+              </button>
+            </div>
           </form>
         </div>
       </div>

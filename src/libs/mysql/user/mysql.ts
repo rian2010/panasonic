@@ -10,26 +10,33 @@ type User = {
   role: string;
 };
 
-export const getAuth = async (
-  username: string,
-  password: string
-): Promise<User | null> => {
+export const getAuth = async (username: string, password: string): Promise<User | null> => {
   const [rows] = await pool.query(
-    "SELECT * FROM users WHERE username = ? AND password = ?",
-    [username, password]
+    "SELECT * FROM users WHERE username = ?",
+    [username]
   );
-  if (rows.length > 0) {
-    console.log(rows[0]);
-    return rows[0] as User[];
+
+  if (rows.length === 0) {
+    return null; // User not found
+  }
+
+  const user = rows[0] as User;
+
+  // Compare hashed password with entered password using bcrypt
+  const passwordMatch = await bcrypt.compare(password, user.password);
+
+  if (passwordMatch) {
+    return user; // Passwords match, return user object
   } else {
-    return null;
+    return null; // Passwords do not match
   }
 };
 
 export const addUser = async (post: User): Promise<void> => {
-  const { id, employeeid, username, password, role } = post;
+  const { employeeid, username, password, role } = post;
   await pool.query(
-    "INSERT INTO users (id, employeeid, username, password, role) VALUES (?, ?, ?, ?, ?)",
-    [id, employeeid, username, password, role]
+    "INSERT INTO users (employeeid, username, password, role) VALUES (?, ?, ?, ?)",
+    [employeeid, username, password, role]
   );
 };
+
