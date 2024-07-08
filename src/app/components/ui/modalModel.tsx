@@ -117,7 +117,7 @@ const DetailsModal: React.FC<ModalProps> = ({ isVisible, onClose, part }) => {
           })
         )
       );
-      
+
       setForm({
         id_line: "",
         status_usage: "Ordered",
@@ -137,7 +137,7 @@ const DetailsModal: React.FC<ModalProps> = ({ isVisible, onClose, part }) => {
   const noParts = parts.length === 0;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-75">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-4xl sm:w-full max-h-screen">
         <div className="flex flex-col h-full">
           <div className="px-4 sm:px-6 py-4 bg-white border-b">
