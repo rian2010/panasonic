@@ -6,16 +6,7 @@ First :
 ```bash
 # 1.
 npm install
-# 2.
-npm install flowbite
-# 3.
-npm install daisyui
-# 4.
-npm install mysql2
-# 5.
-npm install react-circular-progressbar
-# 6.
-npm install @heroicons/react
+
 ```
 
 Second, run the development server:
