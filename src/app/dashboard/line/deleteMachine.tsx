@@ -9,7 +9,12 @@ type Machine = {
   nama_mesin: string;
 };
 
-export default function DeleteMachine(machine: Machine) {
+type DeleteMachineProps = {
+  machine: Machine;
+  onMachineDeleted: () => void;
+};
+
+export default function DeleteMachine({ machine, onMachineDeleted }: DeleteMachineProps) {
   const [modal, setModal] = useState(false);
   const [isMutating, setIsMutating] = useState(false);
 
@@ -26,6 +31,8 @@ export default function DeleteMachine(machine: Machine) {
 
     router.refresh();
     setModal(false);
+
+    onMachineDeleted();
   }
 
   function handleChange() {
@@ -34,10 +41,13 @@ export default function DeleteMachine(machine: Machine) {
 
   return (
     <div>
-       <button className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded" onClick={handleChange}>
-            Delete
-        </button>
-        <input
+      <button
+        className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded"
+        onClick={handleChange}
+      >
+        Delete
+      </button>
+      <input
         type="checkbox"
         checked={modal}
         onChange={handleChange}
@@ -46,7 +56,7 @@ export default function DeleteMachine(machine: Machine) {
 
       <div className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg">
+          <h3 className="font-bold text-lg text-black">
             Are sure to delete {machine.nama_mesin} ?
           </h3>
           <div className="modal-action">

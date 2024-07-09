@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/libs/mysql";
 import { addUser } from "@/libs/mysql/user/mysql";
+import { hashPassword } from "@/app/utils/hashPassword";
 
 export async function GET(request: NextRequest) {
   const session = request.cookies.get("session");
@@ -28,13 +29,17 @@ export async function GET(request: NextRequest) {
 export const POST = async (req: Request, res: Response) => {
   console.log("POST BERHASIL");
 
-  const { id, employeeid, username, password, role } = await req.json();
+  const { employeeid, username, password, role } = await req.json();
 
   try {
-    const post = { employeeid, username, password, role, id: Date.now().toString() };
-    await addUser(post);
+    // Hash the password before adding to database
+    const hashedPassword = await hashPassword(password);
+
+    const post = { employeeid, username, password: hashedPassword, role };
+    await addUser(post); // Assuming addUser handles inserting data into the database
+
     return NextResponse.json({ message: "OK", post }, { status: 200 });
   } catch (err) {
     return NextResponse.json({ message: "Error", err }, { status: 500 });
   }
-};
+}

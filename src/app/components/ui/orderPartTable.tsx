@@ -1,64 +1,92 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from '@/app/components/ui/partHistory';
+import DetailsModal from "../takePart";
+import DetailsModal1 from "./returnPart";
 
 interface Parts {
-  name: string;
-  model: string;
-  machine: string;
-  line: number;
-  location: string;
+  model_id: number;
+  model_name: string;
+  process_name: string;
+  status_usage: string;
+  start_date: string;
+  end_date: string;
 }
 
 const TableComponent: React.FC = () => {
   const [activeTab, setActiveTab] = useState("Line Monitoring");
   const [sortType, setSortType] = useState<null | string>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [isModalVisible, setModalVisible] = useState(false);
+  const [isTakePartModalVisible, setIsTakePartModalVisible] = useState(false);
+  const [isReturnPartModalVisible, setIsReturnPartModalVisible] = useState(false);
   const [selectedPart, setSelectedPart] = useState<Parts | null>(null);
+  const [models, setModels] = useState<Parts[]>([]);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedProcess, setSelectedProcess] = useState<string | null>(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleSort = () => {
     console.log("Sorting A-Z");
   };
 
-  const parts: Parts[] = [
-    {
-      name: "Bor",
-      model: "Model A1",
-      machine: "Machine 1",
-      line: 1,
-      location: "Shelf A1"
-    },
-    {
-      name: "Bor",
-      model: "Model A1",
-      machine: "Machine 1",
-      line: 2,
-      location: "Shelf A1"
-    },
-    {
-      name: "Bor",
-      model: "Model A1",
-      machine: "Machine 1",
-      line: 3,
-      location: "Shelf A1"
-    },
-  ];
+  useEffect(() => {
+    fetchModels();
+  }, []);
 
-  const filteredMachines = parts.filter((part) =>
-    part.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const handleViewHistory = (part: Parts) => {
-    setSelectedPart(part);
-    setModalVisible(true);
+  const fetchModels = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/api/models/modelpart");
+      if (!response.ok) {
+        throw new Error("Failed to fetch models");
+      }
+      const data = await response.json();
+      setModels(data);
+    } catch (error) {
+      console.error("Error fetching models:", error);
+    }
   };
 
-  const handleAnotherAction = (part: Parts) => {
-    console.log("Another action for", part);
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+
+  const handleProcessSelect = (processName: string) => {
+    setSelectedProcess(processName);
+    setDropdownOpen(false);
+    setCurrentPage(1);
+  };
+
+  const paginate = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const uniqueProcesses = Array.from(new Set(models.map((part) => part.process_name)));
+
+  const filteredModels = models.filter((part) => {
+    const matchesProcess = selectedProcess ? part.process_name === selectedProcess : true;
+    const matchesSearch = part.model_name.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesProcess && matchesSearch;
+  });
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredModels.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(filteredModels.length / itemsPerPage);
+
+  const handleViewDetails = (part: Parts) => {
+    setSelectedPart(part);
+    setIsTakePartModalVisible(true);
+  };
+
+  const handleViewDetails1 = (part: Parts) => {
+    setSelectedPart(part);
+    setIsReturnPartModalVisible(true);
   };
 
   const closeModal = () => {
-    setModalVisible(false);
+    setIsTakePartModalVisible(false);
+    setIsReturnPartModalVisible(false);
     setSelectedPart(null);
   };
 
@@ -99,13 +127,13 @@ const TableComponent: React.FC = () => {
           <thead className="text-xs uppercase bg-[#3E3B64] text-white border-b">
             <tr>
               <th scope="col" className="px-6 py-3">
-                Model
+                Model ID
               </th>
               <th scope="col" className="px-6 py-3">
-                Machine
+                Model Name
               </th>
               <th scope="col" className="px-6 py-3">
-                Line
+                Status
               </th>
               <th scope="col" className="px-6 py-3">
                 Start Date
@@ -117,7 +145,7 @@ const TableComponent: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredMachines.map((part, index) => (
+            {currentItems.map((part, index) => (
               <tr
                 key={index}
                 className={`${index % 2 === 0
@@ -125,20 +153,20 @@ const TableComponent: React.FC = () => {
                   : "even:bg-[#4D4B6C] even:dark:bg-[#3E3B64]"
                   } text-white`}
               >
-                <td className="px-6 py-4">{part.model}</td>
-                <td className="px-6 py-4">{part.machine}</td>
-                <td className="px-6 py-4">{part.line}</td>
-                <td className="px-6 py-4"></td>
-                <td className="px-6 py-4"></td>
+                <td className="px-6 py-4">{part.model_id}</td>
+                <td className="px-6 py-4">{part.model_name}</td>
+                <td className="px-6 py-4">{part.status_usage}</td>
+                <td className="px-6 py-4">{part.start_date}</td>
+                <td className="px-6 py-4">{part.end_date}</td>
                 <td className="px-6 py-4 flex space-x-2">
                   <button
-                    onClick={() => handleViewHistory(part)}
+                    onClick={() => handleViewDetails(part)}
                     className="font-medium text-white bg-[#55BED2] px-2 py-1 rounded dark:text-blue-500 hover:bg-blue-700"
                   >
                     Take Part
                   </button>
                   <button
-                    onClick={() => handleAnotherAction(part)}
+                    onClick={() => handleViewDetails1(part)}
                     className="font-medium text-white bg-[#55BED2] px-2 py-1 rounded dark:text-blue-500 hover:bg-blue-700"
                   >
                     Return Part
@@ -148,19 +176,19 @@ const TableComponent: React.FC = () => {
             ))}
           </tbody>
         </table>
+        <DetailsModal
+          isVisible={isTakePartModalVisible}
+          onClose={closeModal}
+          part={selectedPart}
+        />
+        <DetailsModal1
+          isVisible={isReturnPartModalVisible}
+          onClose={closeModal}
+          part={selectedPart}
+        />
       </div>
-      <Modal isVisible={isModalVisible} onClose={closeModal}>
-        {selectedPart && (
-          <div>
-            <h3 className="text-lg font-medium text-gray-900">{selectedPart.name}</h3>
-            <p className="mt-1 text-sm text-gray-600">Model: {selectedPart.model}</p>
-            <p className="mt-1 text-sm text-gray-600">Machine: {selectedPart.machine}</p>
-          </div>
-        )}
-      </Modal>
     </div>
   );
 };
 
 export default TableComponent;
-

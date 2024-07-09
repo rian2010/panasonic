@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Lottie from "lottie-react";
 import notfound from "@/app/images/404.json";
 import DetailsModal from "@/app/components/ui/modalModel";
+import { useSession } from "next-auth/react";
 
 interface Parts {
   model_id: number;
@@ -10,19 +11,27 @@ interface Parts {
 }
 
 const TableComponent: React.FC = () => {
+  const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState("Line Monitoring");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [models, setModels] = useState<Parts[]>([]);
   const [selectedProcess, setSelectedProcess] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(6);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectedPart, setSelectedPart] = useState<Parts | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [userRole, setUserRole] = useState<string | null>(null);
 
   useEffect(() => {
     fetchModels();
   }, []);
+
+  useEffect(() => {
+    if (session && session.user) {
+      setUserRole(session.user.role || null);
+    }
+  }, [session]);
 
   const fetchModels = async () => {
     try {
@@ -81,10 +90,7 @@ const TableComponent: React.FC = () => {
         <div className="flex justify-between items-center border-b">
           <div className="flex space-x-4">
             <span
-              className={`cursor-pointer ${activeTab === "Line Monitoring"
-                ? "text-white border-blue-400"
-                : ""
-                }`}
+              className={`cursor-pointer ${activeTab === "Line Monitoring" ? "text-white border-blue-400" : ""}`}
               onClick={() => setActiveTab("Line Monitoring")}
             >
               Model List
@@ -137,47 +143,40 @@ const TableComponent: React.FC = () => {
                 <table className="min-w-full text-sm text-center text-gray-500 dark:text-gray-400">
                   <thead className="text-xs uppercase bg-[#3E3B64] text-white border-b">
                     <tr>
-                      <th scope="col" className="px-6 py-3">
-                        No
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Model Name
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Details
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-
-                      </th>
+                      <th scope="col" className="px-6 py-3">No</th>
+                      <th scope="col" className="px-6 py-3">Model Name</th>
+                      <th scope="col" className="px-6 py-3">Model Id</th>
+                      <th scope="col" className="px-6 py-3">Details</th>
+                      {userRole !== "common" && <th scope="col" className="px-6 py-3">Actions</th>}
                     </tr>
                   </thead>
                   <tbody>
                     {currentItems.map((part, index) => (
                       <tr
                         key={index}
-                        className={`${index % 2 === 0
-                          ? "odd:bg-[#3E3B64] odd:dark:bg-[#4D4B6C]"
-                          : "even:bg-[#4D4B6C] even:dark:bg-[#3E3B64]"
-                          } text-white`}
+                        className={`${index % 2 === 0 ? "bg-[#3E3B64]" : "bg-[#4D4B6C]"} text-white`}
                       >
                         <td className="px-6 py-4">{indexOfFirstItem + index + 1}</td>
                         <td className="px-6 py-4">{part.model_name}</td>
+                        <td className="px-6 py-4">{part.model_id}</td>
                         <td className="px-6 py-4">
                           <button
-                            className="font-medium text-white bg-[#55BED2] px-2 py-1 rounded dark:text-blue-500 hover:bg-blue-700"
+                            className="font-medium text-white bg-[#55BED2] px-2 py-1 rounded hover:bg-blue-700"
                             onClick={() => handleViewDetails(part)}
                           >
                             View details
                           </button>
                         </td>
-                        <td className="px-6 py-4 flex space-x-2">
-                          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            Edit
-                          </button>
-                          <button className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded">
-                            Delete
-                          </button>
-                        </td>
+                        {userRole !== "common" && (
+                          <td className="px-6 py-4 flex space-x-2">
+                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                              Edit
+                            </button>
+                            <button className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded">
+                              Delete
+                            </button>
+                          </td>
+                        )}
                       </tr>
                     ))}
                   </tbody>
