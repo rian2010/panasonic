@@ -56,7 +56,7 @@ export default function DeleteMachine({ machine, onMachineDeleted }: DeleteMachi
 
       <div className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg">
+          <h3 className="font-bold text-lg text-black">
             Are sure to delete {machine.nama_mesin} ?
           </h3>
           <div className="modal-action">

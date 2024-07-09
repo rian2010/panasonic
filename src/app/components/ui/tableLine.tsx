@@ -3,6 +3,7 @@ import { PlusIcon, FunnelIcon } from "@heroicons/react/24/outline";
 import AddMachine from "@/app/dashboard/line/addMachine";
 import DeleteMachine from "@/app/dashboard/line/deleteMachine";
 import UpdateMachine from "@/app/dashboard/line/updateMachine";
+import { useSession } from "next-auth/react";
 
 interface Machine {
   id_mesin: number;
@@ -21,11 +22,12 @@ interface Line {
 }
 
 const TableComponent: React.FC = () => {
+  const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState("Line Monitoring");
-  const [sortType, setSortType] = useState<null | string>(null); // State to manage sorting type
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [isModalOpen, setIsModalOpen] = useState(false); // State to manage modal visibility
-  const [machines, setMachines] = useState<Machine[]>([]); // State to store machines data
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [machines, setMachines] = useState<Machine[]>([]);
+  const [userRole, setUserRole] = useState<string | null>(null);
 
   useEffect(() => {
     fetchData();
@@ -34,6 +36,12 @@ const TableComponent: React.FC = () => {
 
     return () => clearInterval(intervalId);
   }, []);
+
+  useEffect(() => {
+    if (session && session.user) {
+      setUserRole(session.user.role || null);
+    }
+  }, [session]);
 
   const fetchData = async () => {
     try {
@@ -45,14 +53,6 @@ const TableComponent: React.FC = () => {
       setMachines(data.posts);
     } catch (error) {
       console.error("Error fetching data:", error);
-    }
-  };
-
-  const handleSort = () => {
-    if (sortType === "asc") {
-      setSortType("desc");
-    } else {
-      setSortType("asc");
     }
   };
 
@@ -85,15 +85,15 @@ const TableComponent: React.FC = () => {
     }
   };
 
-  const menghandleMachineAdded = () => {
+  const handleMachineAdded = () => {
     fetchData();
   };
 
-  const menghandleMachineDeleted = () => {
+  const handleMachineDeleted = () => {
     fetchData();
   };
 
-  const menghandleMachineUpdate = () => {
+  const handleMachineUpdate = () => {
     fetchData();
   };
 
@@ -148,12 +148,12 @@ const TableComponent: React.FC = () => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        {activeTab === "Line Monitoring" && (
+        {activeTab === "Line Monitoring" && userRole !== "common" && (
           <div className="pr-4">
-            < AddMachine onMachineAdded={menghandleMachineAdded}/>
+            <AddMachine onMachineAdded={handleMachineAdded} />
           </div>
         )}
-        {activeTab === "Line" && (
+        {activeTab === "Line" && userRole !== "common" && (
           <div className="pr-4">
             <button className="text-sm bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded-xl flex items-center space-x-2">
               <PlusIcon className="w-6 h-6" />
@@ -214,8 +214,18 @@ const TableComponent: React.FC = () => {
                     )}
                   </td>
                   <td className="px-6 py-4 flex space-x-2">
-                    < UpdateMachine machine={machine} onMachineUpdate={menghandleMachineUpdate}/>
-                    <DeleteMachine machine={machine} onMachineDeleted={menghandleMachineDeleted} />
+                    {userRole !== "common" && (
+                      <>
+                        <UpdateMachine
+                          machine={machine}
+                          onMachineUpdate={handleMachineUpdate}
+                        />
+                        <DeleteMachine
+                          machine={machine}
+                          onMachineDeleted={handleMachineDeleted}
+                        />
+                      </>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -232,33 +242,36 @@ const TableComponent: React.FC = () => {
                 <th scope="col" className="px-6 py-3">
                   Status
                 </th>
-                <th scope="col" className="px-6 py-3"></th>
               </tr>
             </thead>
             <tbody>
               {lines.map((line, index) => (
                 <tr
-                  key={index}
+                  key={line.line}
                   className={`${index % 2 === 0
                     ? "odd:bg-[#3E3B64] odd:dark:bg-[#4D4B6C]"
                     : "even:bg-[#4D4B6C] even:dark:bg-[#3E3B64]"
                     } text-white`}
                 >
-                  <td className="px-6 py-4">{line.line}</td>
+                  <td className="px-6 py-4">{`Line ${line.line}`}</td>
                   <td className="px-6 py-4">
                     <span
-                      className={`inline-flex items-center justify-center px-4 py-2 rounded-full ${line.lineColor} text-blue-900 font-bold`}
+                      className={`px-4 py-2 rounded-full ${line.lineColor} text-blue-900 font-bold`}
                     >
                       {line.status}
                     </span>
                   </td>
                   <td className="px-6 py-4 flex space-x-2">
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                      Edit
-                    </button>
-                    <button className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded">
-                      Delete
-                    </button>
+                    {userRole !== "common" && (
+                      <>
+                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                          Edit
+                        </button>
+                        <button className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded">
+                          Delete
+                        </button>
+                      </>
+                    )}
                   </td>
                 </tr>
               ))}

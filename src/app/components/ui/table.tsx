@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FunnelIcon, PlusIcon } from "@heroicons/react/24/outline";
+import { useSession } from "next-auth/react";
 
 function TableComponent() {
+  const session = useSession();
   const [activeTab, setActiveTab] = useState("Part Types");
   const [sortType, setSortType] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [userRole, setUserRole] = useState(null);
 
   interface Part {
     part: string;
@@ -82,6 +85,15 @@ function TableComponent() {
     part.part.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  useEffect(() => {
+    if (!localStorage.getItem("role")) {
+      localStorage.setItem("role", session.data?.user.role);
+      setUserRole(session.data?.user.role);
+    } else {
+      setUserRole(localStorage.getItem("role"));
+    }
+  }, [session.data?.user.role]);
+
   return (
     <div className="relative justify-center overflow-x-auto shadow-md sm:rounded-lg">
       <div className="overflow-x-auto whitespace-nowrap pl-4 py-2 text-md bg-[#3E3B64] text-white border-b">
@@ -129,10 +141,12 @@ function TableComponent() {
         {activeTab === "Part Types" && (
           <div>
             <div className="px-4">
-              <button className="bg-[#59C5F7] hover:bg-green-700 text-black font-bold py-2 px-4 rounded my-4 flex items-center">
-                <PlusIcon className="w-6 h-6" />
-                <span>Add Part</span>
-              </button>
+              {userRole !== "common" && (
+                <button className="bg-[#59C5F7] hover:bg-green-700 text-black font-bold py-2 px-4 rounded my-4 flex items-center">
+                  <PlusIcon className="w-6 h-6" />
+                  <span>Add Part</span>
+                </button>
+              )}
             </div>
 
             <table className="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400">
@@ -167,14 +181,17 @@ function TableComponent() {
                     <td className="px-6 py-4">{part.quantity}</td>
                     <td className="px-6 py-4">{part.location}</td>
                     <td className="px-6 py-4 flex space-x-2">
-                      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                        Edit
-                      </button>
-                      <button className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded">
-                        Delete
-                      </button>
+                      {userRole !== "common" && (
+                        <>
+                          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Edit
+                          </button>
+                          <button className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded">
+                            Delete
+                          </button>
+                        </>
+                      )}
                     </td>
-
                   </tr>
                 ))}
               </tbody>
@@ -222,12 +239,16 @@ function TableComponent() {
                     )}
                   </td>
                   <td className="px-6 py-4 flex space-x-2">
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                      Edit
-                    </button>
-                    <button className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded">
-                      Delete
-                    </button>
+                    {userRole !== "common" && (
+                      <>
+                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                          Edit
+                        </button>
+                        <button className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded">
+                          Delete
+                        </button>
+                      </>
+                    )}
                   </td>
                 </tr>
               ))}

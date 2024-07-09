@@ -5,69 +5,69 @@ import { useRouter } from "next/navigation";
 import { PlusIcon } from "@heroicons/react/24/outline";
 
 interface Line {
-    id_line: number;
-    nama_line: string;
-  }
-  type AddMachineProps = {
-    onMachineAdded: () => void;
-  };
-  
-  export default function AddMachine({ onMachineAdded }: AddMachineProps) {
-    const [idline, setId] = useState("");
-    const [name, setName] = useState("");
-    const [modal, setModal] = useState(false);
-    const [isMutating, setIsMutating] = useState(false);
-    const [lines, setLines] = useState<Line[]>([]);
-  
-    const router = useRouter();
-  
-    useEffect(() => {
-      fetchLines();
-    }, []);
-  
-    const fetchLines = async () => {
-      try {
-        const response = await fetch("/api/line");
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        const data = await response.json();
-        setLines(data.lines);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+  id_line: number;
+  nama_line: string;
+}
+type AddMachineProps = {
+  onMachineAdded: () => void;
+};
+
+export default function AddMachine({ onMachineAdded }: AddMachineProps) {
+  const [idline, setId] = useState("");
+  const [name, setName] = useState("");
+  const [modal, setModal] = useState(false);
+  const [isMutating, setIsMutating] = useState(false);
+  const [lines, setLines] = useState<Line[]>([]);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    fetchLines();
+  }, []);
+
+  const fetchLines = async () => {
+    try {
+      const response = await fetch("/api/line");
+      if (!response.ok) {
+        throw new Error("Failed to fetch data");
       }
-    };
-  
-    async function handleSubmit(e: SyntheticEvent) {
-      e.preventDefault();
-  
-      setIsMutating(true);
-  
-      await fetch("http://localhost:3000/api/machine", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id_line: idline,
-          nama_mesin: name,
-        }),
-      });
-  
-      setIsMutating(false);
-  
-      setId("");
-      setName("");
-      router.refresh();
-      setModal(false);
-  
-      // Panggil callback untuk memberitahukan bahwa mesin telah ditambahkan
-      onMachineAdded();
+      const data = await response.json();
+      setLines(data.lines);
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
-  
-    function handleChange() {
-      setModal(!modal);
-    }
+  };
+
+  async function handleSubmit(e: SyntheticEvent) {
+    e.preventDefault();
+
+    setIsMutating(true);
+
+    await fetch("http://localhost:3000/api/machine", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id_line: idline,
+        nama_mesin: name,
+      }),
+    });
+
+    setIsMutating(false);
+
+    setId("");
+    setName("");
+    router.refresh();
+    setModal(false);
+
+    // Panggil callback untuk memberitahukan bahwa mesin telah ditambahkan
+    onMachineAdded();
+  }
+
+  function handleChange() {
+    setModal(!modal);
+  }
 
   return (
     <div>
@@ -88,11 +88,11 @@ interface Line {
           <h3 className="font-bold text-lg">Add New Machine</h3>
           <form onSubmit={handleSubmit}>
             <div className="form-control">
-              <label className="label font-bold">Line</label>
+              <label className="label font-bold text-black">Line</label>
               <select
                 value={idline}
                 onChange={(e) => setId(e.target.value)}
-                className="select w-full select-bordered"
+                className="select w-full select-bordered text-black"
                 required
               >
                 <option value="" disabled>Pilih Line</option>
