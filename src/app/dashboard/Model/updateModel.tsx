@@ -80,31 +80,31 @@ export default function UpdateModels({ models, onModelsUpdate }: UpdateModelsPro
           <h3 className="font-bold text-lg">Edit {models.model_name}</h3>
           <form onSubmit={handleUpdate}>
             <div className="form-control">
-              <label className="label font-bold">Nama Model</label>
+              <label className="label font-bold text-black">Nama Model</label>
               <input
                 type="text"
                 value={modelname}
                 onChange={(e) => setModels(e.target.value)}
-                className="input w-full input-bordered"
+                className="input w-full input-bordered text-black"
                 placeholder="Price"
                 required
               />
-              </div>
-              <div className="form-control">
-                <label className="label font-bold">Nama Process</label>
-                <select
-                  value={processid}
-                  onChange={(e) => setProcess(e.target.value)}
-                  className="input w-full input-bordered"
-                  required
-                >
-                  {processOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            </div>
+            <div className="form-control">
+              <label className="label font-bold text-black">Nama Process</label>
+              <select
+                value={processid}
+                onChange={(e) => setProcess(e.target.value)}
+                className="input w-full input-bordered text-black"
+                required
+              >
+                {processOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.name}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div className="modal-action">
               <button type="button" className="btn" onClick={handleChange}>
                 Close

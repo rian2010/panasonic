@@ -109,18 +109,18 @@ export default function AddPart({ onPartsAdded }: AddPartProps) {
             <h3 className="font-bold text-lg">Add New Part</h3>
             <form onSubmit={handleSubmit}>
               <div className="form-control">
-                <label className="label font-bold">Model</label>
+                <label className="label font-bold text-black">Model</label>
                 <input
                   type="text"
                   value={searchTerm}
                   onChange={handleSearch}
-                  className="input w-full input-bordered"
+                  className="input w-full input-bordered text-black"
                   placeholder="Search Model..."
                 />
                 <select
                   value={modelid}
                   onChange={(e) => setModelId(e.target.value)}
-                  className="input w-full input-bordered"
+                  className="input w-full input-bordered mt-2 text-black"
                   required
                 >
                   <option value="">Select Model</option>
@@ -140,7 +140,7 @@ export default function AddPart({ onPartsAdded }: AddPartProps) {
                 </select>
               </div>
               <div className="form-control">
-                <label className="label font-bold">Part</label>
+                <label className="label font-bold text-black">Part</label>
                 <input
                   type="text"
                   value={partname}
@@ -151,7 +151,7 @@ export default function AddPart({ onPartsAdded }: AddPartProps) {
                 />
               </div>
               <div className="form-control">
-                <label className="label font-bold">Size</label>
+                <label className="label font-bold text-black">Size</label>
                 <input
                   type="text"
                   value={size}

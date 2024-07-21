@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Lottie from "lottie-react";
 import notfound from "@/app/images/404.json";
-import DetailsModal from "@/app/components/ui/modalModel";
+import DetailsModal from "@/app/components/ui/modal";
 import UpdateModels from "@/app/dashboard/Model/updateModel";
 
 interface Parts {
@@ -181,7 +181,7 @@ const TableComponent: React.FC = () => {
                           </button>
                         </td>
                         <td className="px-6 py-4 flex space-x-2">
-                          < UpdateModels models={part} onModelsUpdate={menghandleModelsUpdate}/>
+                          < UpdateModels models={part} onModelsUpdate={menghandleModelsUpdate} />
                           {/* <button className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded">
                             Delete
                           </button> */}
